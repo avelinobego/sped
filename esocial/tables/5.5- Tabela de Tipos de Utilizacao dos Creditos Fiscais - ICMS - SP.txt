@@ -1,0 +1,5 @@
+﻿versão=1 TIPO_UTIL, DESC_TIPO, DT_INI, DT_FIM
+SP01|Compensação Escritural - conjuntamente com a apuração relativa às operações submetidas ao regime comum de tributação, mediante lançamento no livro Registro de Apuração do ICMS (inciso I do artigo 270 do RICMS/00)|01012017|
+SP02|Nota Fiscal de Ressarcimento - mercadoria recebida diretamente do estabelecimento do sujeito passivo por substituição, mediante emissão de documento fiscal, previamente visado pela repartição fiscal, indicando como destinatário o referido estabelecimento e como valor da operação aquele a ser ressarcido (art 270, II do RICMS/00)|01012017|
+SP03|Pedido de Ressarcimento - mediante requerimento à Secretaria da Fazenda (inciso III do artigo 270 do RICMS/00)|01012017|
+SP04|Liquidação de débito fiscal do estabelecimento ou de outro do mesmo titular (§ 2º do artigo 270 do RICMS/00)|01012017|

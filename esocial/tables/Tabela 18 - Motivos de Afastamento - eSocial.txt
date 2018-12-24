@@ -1,0 +1,37 @@
+﻿versão=10 CODIGO, DESCRICAO, DTINICIO, DTFIM, PERALTMOT, DOMESTICO, DESCRESUM, SUSSALMEN, PAGSALFAM, GERAREMUN
+01|Acidente/Doença do trabalho|01012014||03;06|S|Acidente/Doença do trabalho|S|2|S
+02|Novo afastamento decorrente do mesmo acidente/doença do trabalho dentro de 60 dias|01012014|31122016|6|S|Novo afast.pelo mesmo acidente/doença do trabalho|S|2|S
+03|Acidente/Doença não relacionada ao trabalho|01012014||01;06|S|Acidente/Doença não relacionada ao trabalho|S|2|N
+04|Novo afastamento decorrente do mesmo acidente/doença não relacionado ao trabalho dentro de 60 dias|01012014|31122016|6|S|Novo afast. mesmo acid/doença não rel. ao trabalho|S|2|N
+05|Afastamento/licença prevista em regime próprio (estatuto), sem remuneração|01012014|||N||||
+06|Aposentadoria por invalidez|01012014|||S|Aposentadoria por invalidez|S|2|N
+07|Acompanhamento - Licença para acompanhamento de membro da família enfermo|01012014|||N||||
+08|Afastamento do empregado para participar de atividade do Conselho Curador do FGTS - art. 65, §6º, Dec. 99.684/90 (Regulamento do FGTS)|01012014|||N||||
+10|Afastamento/licença prevista em regime próprio (estatuto), com remuneração|01012014|||N||||
+11|Cárcere|01012014|||S|Cárcere|S|3|N
+12|Cargo Eletivo - Candidato a cargo eletivo - Lei 7.664/1988. art. 25°, parágrafo único - Celetistas em geral|01012014|||S|Candidato a Cargo Eletivo - Lei 7.664/1988|S|3|N
+13|Cargo Eletivo - Candidato a cargo eletivo - Lei Complementar 64/1990. art. 1°, inciso II, alínea “l” - Servidor público, estatutário ou não, dos órgãos ou entidades da Administração Direta ou Indireta da União, dos Estados, do Distrito Federal, dos Municípios e dos Territórios, inclusive das fundações mantidas pelo Poder Público.|01012014|||N||||
+14|Cessão / Requisição|01012014|||N||||
+15|Gozo de férias ou recesso - Afastamento temporário para o gozo de férias ou recesso|01012014|||S|Férias|S|1|S
+16|Licença remunerada - Lei, liberalidade da empresa ou Acordo/Convenção Coletiva de Trabalho|01012014|||S|Licença remunerada|N|1|S
+17|Licença Maternidade - 120 dias e suas prorrogações/antecipações, inclusive para o cônjuge sobrevivente|01012014|30062018||S|Licença Maternidade - 120 dias|S|1|S
+17|Licença Maternidade - 120 dias|01072018|||S|Licença Maternidade - 120 dias|S|1|S
+18|Licença Maternidade - 121 dias a 180 dias, Lei 11.770/2008 (Empresa Cidadã), inclusive para o cônjuge sobrevivente|01012014|31122016||S|Licença Maternidade - a partir de 120 dias|||
+18|Licença Maternidade - 121 dias a 180 dias, Lei 11.770/2008 (Empresa Cidadã), inclusive para o cônjuge sobrevivente|01012018|||N|Licença Maternidade - a partir de 120 dias|||
+19|Licença Maternidade - Afastamento temporário por motivo de aborto não criminoso|01012014|||S|Licença Maternidade - aborto não criminoso|S|1|S
+20|Licença Maternidade - Afastamento temporário por motivo de licença-maternidade decorrente de adoção ou guarda judicial de criança, inclusive para o cônjuge sobrevivente|01012014|||S|Licença Maternidade - adoção ou guarda judicial|S|1|S
+21|Licença não remunerada ou Sem Vencimento|01012014|||S|Licença não remunerada ou sem vencimento|S|3|N
+22|Mandato Eleitoral - Afastamento temporário para o exercício de mandato eleitoral, sem remuneração|01012014|||S|Mandato Eleitoral, sem remuneração|S|3|N
+23|Mandato Eleitoral - Afastamento temporário para o exercício de mandato eleitoral, com remuneração|01012014|31122016||S|Mandato Eleitoral, com remuneração|||
+23|Mandato Eleitoral - Afastamento temporário para o exercício de mandato eleitoral, com remuneração|01012017|||N|Mandato Eleitoral, com remuneração|||
+24|Mandato Sindical - Afastamento temporário para exercício de mandato sindical|01012014|||S|Mandato Sindical|||
+25|Mulher vítima de violência - Lei 11.340/2006 - art. 9º  §2o, II - Lei Maria da Penha|01012014|||S|Mulher vítima de violência - Lei 11.340/2006|S|3|N
+26|Participação de empregado no Conselho Nacional de Previdência Social-CNPS (art. 3º, Lei 8.213/1991)|01012014|||N||||
+27|Qualificação - Afastamento por suspensão do contrato de acordo com o art 476-A da CLT|01012014|||N||||
+28|Representante Sindical - Afastamento pelo tempo que se fizer necessário, quando, na qualidade de representante de entidade sindical, estiver participando de reunião oficial de organismo internacional do qual o Brasil seja membro|01012014|||N||||
+29|Serviço Militar - Afastamento temporário para prestar serviço militar obrigatório;|01012014|||S|Serviço Militar Obrigatório|S|3|S
+30|Suspensão disciplinar - CLT, art. 474|01012014|||S|Suspensão disciplinar - CLT, art. 474|S|3|N
+31|Servidor Público em Disponibilidade|01012014|||N||||
+33|Licença Maternidade - de 180 dias, Lei 13.301/2016.|01062016|||S|Licença Maternidade - 180 dias - crianças com sequelas neurológicas por doenças transmitidas pelo Aedes aegypti|S|1|S
+34|Inatividade do trabalhador avulso (portuário ou não portuário) por período superior a 90 dias|01012014|||N||||
+35|Licença Maternidade - Antecipação e/ou prorrogação mediante atestado médico|01072018|||N|Licença Maternidade - Antecipação e/ou prorrogação mediante atestado médico|S|1|S

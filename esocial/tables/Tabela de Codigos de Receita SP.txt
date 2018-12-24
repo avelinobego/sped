@@ -1,0 +1,75 @@
+﻿versão=3 COD_REC, DESC_COD, DT_INI, DT_FIM
+046-2|Regime PeriÃ³dico de ApuraÃ§Ã£o|01072016|
+060-7|Regime de Estimativa|01072016|
+063-2|Outros recolhimentos especiais|01072016|
+075-9|DÃ­vida ativa â€“ cobranÃ§a amigÃ¡vel|01072016|
+077-2|DÃ­vida ativa ajuizada â€“ parcelamento|01072016|
+078-4|DÃ­vida ativa ajuizada|01072016|
+081-4|Parcelamento de dÃ©bito fiscal nÃ£o inscrito|01072016|
+087-5|ICM/ICMS â€“ Programa de Parcelamento Incentivado â€“ PPI|01072016|
+089-9|ICM/ICMS - Programa Especial de Parcelamento - PEP|01072016|
+100-4|ICMS recolhimento antecipado (outra UF)|01072016|
+101-6|Consumidor final nÃ£o contribuinte por operaÃ§Ã£o (outra UF)|01072016|
+102-8|Consumidor final nÃ£o contribuinte por apuraÃ§Ã£o (outra UF)|01072016|
+106-5|Exigido em Auto de InfraÃ§Ã£o e ImposiÃ§Ã£o de Multa â€“ AIIM|01072016|
+107-7|Exigido em Auto de InfraÃ§Ã£o e ImposiÃ§Ã£o de MultaÂ  AIIMÂ  (outra UF)|01072016|
+110-7|Transporte (transportador autÃ´nomo do Estado de SÃ£o Paulo)|01072016|
+111-9|Transporte (outra UF)|01072016|
+112-0|ComunicaÃ§Ã£o (no Estado de SÃ£o Paulo)|01072016|
+113-2|ComunicaÃ§Ã£o (outra UF)|01072016|
+114-4|Mercadorias destinadas a consumo ou a ativo imobilizado|01072016|
+115-6|Energia elÃ©trica (no Estado de SÃ£o Paulo)|01072016|
+116-8|Energia elÃ©trica (outra UF)|01072016|
+117-0|CombustÃ­vel (no Estado de SÃ£o Paulo)|01072016|
+118-1|CombustÃ­vel (outra UF)|01072016|
+119-3|Recolhimentos especiais (outra UF)|01072016|
+120-0|Mercadoria importada (desembaraÃ§ada no Estado de SÃ£o Paulo)|01072016|
+123-5|ExportaÃ§Ã£o de cafÃ© cru|01072016|
+128-4|OperaÃ§Ãµes internas e interestaduais com cafÃ© cru|01072016|
+137-5|Abate de gado|01072016|
+141-7|OperaÃ§Ãµes com feijÃ£o|01072016|
+146-6|SubstituiÃ§Ã£o tributÃ¡ria (contribuinte do Estado de SÃ£o Paulo)|01072016|
+154-5|DiferenÃ§a de estimativa|01072016|
+214-8|Mercadoria importada (desembaraÃ§ada em outra UF)|01072016|
+246-0|SubstituiÃ§Ã£o tributÃ¡ria por apuraÃ§Ã£o (contribuinte de outra UF)|01072016|
+247-1|SubstituiÃ§Ã£o tributÃ¡ria por operaÃ§Ã£o (outra UF)|01072016|
+103-0|Fundo estadual de combate e erradicaÃ§Ã£o da pobreza (FECOEP) â€“ por operaÃ§Ã£o|01072016|
+104-1|Fundo estadual de combate e erradicaÃ§Ã£o da pobreza (FECOEP) â€“ por apuraÃ§Ã£o|01072016|
+091-7|ICM/ICMS - Programa Especial de Parcelamento – PEP2017|01072017|
+046-2|Regime Periódico de Apuração|01012009|30062016
+060-7|Regime de Estimativa|01012009|30062016
+063-2|Outros recolhimentos especiais|01012009|30062016
+075-9|Dívida ativa – cobrança amigável|01012009|30062016
+077-2|Dívida ativa ajuizada – parcelamento|01012009|30062016
+078-4|Dívida ativa ajuizada|01012009|30062016
+081-4|Parcelamento de débito fiscal não inscrito|01012009|30062016
+087-5|ICM/ICMS – Programa de Parcelamento Incentivado – PPI|01012009|30062016
+089-9|ICM/ICMS - Programa Especial de Parcelamento - PEP|01012009|30062016
+100-4|ICMS recolhimento antecipado (outra UF)|01012009|30062016
+101-6|Consumidor final não contribuinte por operação (outra UF)|01012009|30062016
+102-8|Consumidor final não contribuinte por apuração (outra UF)|01012009|30062016
+106-5|Exigido em Auto de Infração e Imposição de Multa – AIIM|01012009|30062016
+107-7|Exigido em Auto de Infração e Imposição de Multa  AIIM  (outra UF)|01012009|30062016
+110-7|Transporte (transportador autônomo do Estado de São Paulo)|01012009|30062016
+111-9|Transporte (outra UF)|01012009|30062016
+112-0|Comunicação (no Estado de São Paulo)|01012009|30062016
+113-2|Comunicação (outra UF)|01012009|30062016
+114-4|Mercadorias destinadas a consumo ou a ativo imobilizado|01012009|30062016
+115-6|Energia elétrica (no Estado de São Paulo)|01012009|30062016
+116-8|Energia elétrica (outra UF)|01012009|30062016
+117-0|Combustível (no Estado de São Paulo)|01012009|30062016
+118-1|Combustível (outra UF)|01012009|30062016
+119-3|Recolhimentos especiais (outra UF)|01012009|30062016
+120-0|Mercadoria importada (desembaraçada no Estado de São Paulo)|01012009|30062016
+123-5|Exportação de café cru|01012009|30062016
+128-4|Operações internas e interestaduais com café cru|01012009|30062016
+137-5|Abate de gado|01012009|30062016
+141-7|Operações com feijão|01012009|30062016
+146-6|Substituição tributária (contribuinte do Estado de São Paulo)|01012009|30062016
+154-5|Diferença de estimativa|01012009|30062016
+214-8|Mercadoria importada (desembaraçada em outra UF)|01012009|30062016
+246-0|Substituição tributária por apuração (contribuinte de outra UF)|01012009|30062016
+247-1|Substituição tributária por operação (outra UF)|01012009|30062016
+103-0|Fundo estadual de combate e erradicação da pobreza (FECOEP) – por operação|01012009|30062016
+104-1|Fundo estadual de combate e erradicação da pobreza (FECOEP) – por apuração|01012009|30062016
+091-7|ICM/ICMS - Programa Especial de Parcelamento - PEP2017|01012009|30062017

@@ -1,0 +1,20 @@
+﻿versão=3 CODIGO, DESCRICAO, DTINICIO, DTFIM, TPInsc
+01|Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída|01012014||1
+02|Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária não substituída|01012014||1
+03|Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída e não substituída|01012014||1
+04|MEI - Micro Empreendedor Individual|01012014||1
+06|Agroindústria|01012014||1
+07|Produtor Rural Pessoa Jurídica|01012014||1
+08|Consórcio Simplificado de Produtores Rurais|01012014||1
+09|Órgão Gestor de Mão de Obra|01012014||1
+10|Entidade Sindical a que se refere a Lei 12.023/2009|01012014||1
+11|Associação Desportiva que mantém Clube de Futebol Profissional|01012014||1
+13|Banco, caixa econômica, sociedade de crédito, financiamento e investimento e demais empresas relacionadas no parágrafo 1º do art. 22 da Lei 8.212./91|01012014||1
+14|Sindicatos em geral, exceto aquele classificado no código [10]|01012014||1
+21|Pessoa Física, exceto Segurado Especial|01012014||2
+22|Segurado Especial, inclusive quando for empregador doméstico|01012014||2
+60|Missão Diplomática ou Repartição Consular de carreira estrangeira|01012014||1
+70|Empresa de que trata o Decreto 5.436/2005|01012014||1
+80|Entidade Beneficente de Assistência Social isenta de contribuições sociais|01012014||1
+85|Administração Direta da União, Estados, Distrito Federal e Municípíos; Autarquias e Fundações Públicas|01012014||1
+99|Pessoas Jurídicas em Geral|01012014||1

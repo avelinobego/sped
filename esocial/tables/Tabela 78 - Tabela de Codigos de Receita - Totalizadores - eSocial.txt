@@ -1,0 +1,26 @@
+﻿versão=1 Codigo, Descrição, dtinicio, dtfim
+047301|Renda e Proventos de Qualquer Natureza|01012014|
+056107|IRRF - Rendimento do Trabalho Assalariado no País/Ausente no Exterior a Serviço do País|01012014|
+056108|IRRF - Empregado Doméstico|01012014|
+056109|IRRF - Empregado Doméstico - 13º Sal Rescisão|01012014|
+056110|IRRF - Empregado doméstico - 13º salário|01012014|
+056111|IRRF - Empregado/Trabalhador Rural - Segurado Especial|01012014|
+056112|IRRF - Empregado/Trabalhador Rural - Segurado Especial 13° salário|01012014|
+056113|IRRF - Empregado/Trabalhador Rural - Segurado Especial 13° salário rescisório|01012014|
+058806|IRRF - Rendimento do trabalho sem vínculo empregatício|01012014|
+061001|IRRF - Rendimentos relativos a prestação de serviços de transporte rodoviário internacional de carga, pagos a transportador autônomo PF residente no Paraguai|01012014|
+108201|Contribuição previdenciária (CP) descontada do segurado empregado/avulso, alíquotas 8%, 9% ou 11%|01012014|
+108202|CP descontada do segurado empregado rural curto prazo, alíquota de 8%, lei 11718/2008|01012014|
+108203|CP descontada do segurado empregado doméstico ou segurado especial, alíquota de 8%, 9% ou 11%|01012014|
+108204|CP descontada do segurado especial curto prazo, alíquota de 8%, lei 11718/2008|01012014|
+108221|CP descontada do segurado empregado/avulso 13° salário, alíquotas 8%, 9% ou 11%. (codIncCP = [12, 16])|01012014|
+108222|CP descontada do segurado empregado rural curto prazo 13° salário, alíquota de 8%, lei 11718/2008 (codIncCP = [12, 16])|01012014|
+108223|CP descontada do segurado empregado doméstico ou segurado especial 13° salário, alíquota de 8%, 9% ou 11% ;(codIncCP = [12, 16])|01012014|
+108224|CP descontada do segurado especial curto prazo 13° salário, alíquota de 8%, lei 11718/2008 (codIncCP = [12, 16])|01012014|
+109901|CP descontada do contribuinte individual, alíquota de 11%|01012014|
+109902|CP descontada do contribuinte individual, alíquota de 20%|01012014|
+121802|Contribuição ao SEST, descontada do transportador autônomo, à alíquota de 1,5%|01012014|
+122102|Contribuição ao SENAT, descontada do transportador autônomo, à alíquota de 1,0%|01012014|
+328006|IRRF - Serviços Prestados por associados de cooperativas de trabalho|01012014|
+3533|Proventos de Aposentadoria, Reserva, Reforma ou Pensão Pagos por Previdência Pública|01012014|
+356201|IRRF - Participação dos trabalhadores em Lucros ou Resultados (PLR)|01012014|

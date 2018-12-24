@@ -1,0 +1,282 @@
+﻿versão=4 CODIGO, DESCRICAO, DTINICIO, DTFIM
+008|Abu Dhabi|01011900|13121996
+009|Dirce|01011900|13121996
+013|Afeganistao|01011900|
+015|Aland, Ilhas|07122015|
+017|Albania, Republica Da|01011900|
+020|Alboran-Perejil,Ilhas|01011900|13121996
+023|Alemanha|01011900|
+025|Alemanha, Republica Democratica|01011900|13121996
+031|Burkina Faso|01011900|
+037|Andorra|01011900|
+040|Angola|01011900|
+041|Anguilla|01011900|
+042|Antartica|01011900|
+043|Antigua E Barbuda|01011900|
+047|Antilhas Holandesas|01011900|30042018
+053|Arabia Saudita|01011900|
+059|Argelia|01011900|
+063|Argentina|01011900|
+064|Armenia, Republica Da|01011900|
+065|Aruba|01011900|
+069|Australia|01011900|
+072|Austria|01011900|
+073|Azerbaijao, Republica Do|01011900|
+077|Bahamas, Ilhas|01011900|
+080|Bahrein, Ilhas|01011900|
+081|Bangladesh|01011900|
+083|Barbados|01011900|
+085|Belarus, Republica Da|01011900|
+087|Belgica|01011900|
+088|Belize|01011900|
+090|Bermudas|01011900|
+093|Mianmar (Birmania)|01011900|
+097|Bolivia, Estado Plurinacional Da|01011900|
+098|Bosnia-Herzegovina (Republica Da)|01011900|
+099|Bonaire, Saint Eustatius E Saba|07122015|
+100|Int.Z.F.Manaus|01121991|13121996
+101|Botsuana|01011900|
+102|Bouvet, Ilha|07122015|
+105|Brasil|01011900|
+106|Fretado P/Brasil|01121991|14111996
+108|Brunei|01011900|
+111|Bulgaria, Republica Da|01011900|
+115|Burundi|01011900|
+119|Butao|01011900|
+127|Cabo Verde, Republica De|01011900|
+131|Cachemira|01011900|13121996
+137|Cayman, Ilhas|01011900|
+141|Camboja|01011900|
+145|Camaroes|01011900|
+149|Canada|01011900|
+150|Ilhas Do Canal (Jersey E Guernsey)|01011900|30042018
+151|Canarias, Ilhas|01011900|30042018
+152|Canal,Ilhas|01011900|13121996
+153|Cazaquistao, Republica Do|01011900|
+154|Catar|01011900|
+158|Chile|01011900|
+160|China, Republica Popular|01011900|
+161|Formosa (Taiwan)|01011900|
+163|Chipre|01011900|
+165|Cocos(Keeling),Ilhas|01011900|
+169|Colombia|01011900|
+173|Comores, Ilhas|01011900|
+177|Congo|01011900|
+183|Cook, Ilhas|01011900|
+187|Coreia (Do Norte), Rep.Pop.Democratica|01011900|
+190|Coreia (Do Sul), Republica Da|01011900|
+193|Costa Do Marfim|01011900|
+195|Croacia (Republica Da)|01011900|
+196|Costa Rica|01011900|
+198|Kuwait(Coveite)|01011900|
+199|Cuba|01011900|
+200|Curacao|07122015|
+229|Benin|01011900|
+232|Dinamarca|01011900|
+235|Dominica,Ilha|01011900|
+237|Dubai|01011900|13121996
+239|Equador|01011900|
+240|Egito|01011900|
+243|Eritreia|17072006|
+244|Emirados Arabes Unidos|01011900|
+245|Espanha|01011900|
+246|Eslovenia, Republica Da|01011900|
+247|Eslovaca, Republica|01011900|
+249|Estados Unidos|01011900|
+251|Estonia, Republica Da|01011900|
+253|Etiopia|01011900|
+255|Falkland (Ilhas Malvinas)|01011900|
+259|Feroe, Ilhas|01011900|
+263|Fezzan|01011900|13121996
+267|Filipinas|01011900|
+271|Finlandia|01011900|
+275|Franca|01011900|
+281|Gabao|01011900|
+285|Gambia|01011900|
+289|Gana|01011900|
+291|Georgia, Republica Da|01011900|
+292|Georgia Do Sul E Sandwich Do Sul, Ilhas|01011900|
+293|Gibraltar|01011900|
+297|Granada|01011900|
+301|Grecia|01011900|
+305|Groenlandia|01011900|
+309|Guadalupe|01011900|
+313|Guam|01011900|
+317|Guatemala|01011900|
+321|Guernsey|01011900|
+325|Guiana Francesa|01011900|
+329|Guine|01011900|
+331|Guine-Equatorial|01011900|
+334|Guine-Bissau|01011900|
+337|Guiana|01011900|
+341|Haiti|01011900|
+343|Heard E Ilhas McDonald, Ilha|01011900|
+345|Honduras|01011900|
+351|Hong Kong|01011900|
+355|Hungria, Republica Da|01011900|
+357|Iemen|01011900|
+358|Iemem Do Sul|01011900|13121996
+359|Man, Ilha De|01011900|
+361|India|01011900|
+365|Indonesia|01011900|
+367|Inglaterra|01011900|18031997
+369|Iraque|01011900|
+372|Ira, Republica Islamica Do|01011900|
+375|Irlanda|01011900|
+379|Islandia|01011900|
+383|Israel|01011900|
+386|Italia|01011900|
+388|Servia E Montenegro|01011900|21112013
+391|Jamaica|01011900|
+393|Jersey|01011900|
+395|Jammu|01011900|13121996
+396|Johnston, Ilhas|01011900|30042018
+399|Japao|01011900|
+403|Jordania|01011900|
+411|Kiribati|01011900|
+420|Laos, Rep.Pop.Democr.Do|01011900|
+423|Lebuan,Ilhas|01011900|30042018
+426|Lesoto|01011900|
+427|Letonia, Republica Da|01011900|
+431|Libano|01011900|
+434|Liberia|01011900|
+438|Libia|01011900|
+440|Liechtenstein|01011900|
+442|Lituania, Republica Da|01011900|
+445|Luxemburgo|01011900|
+447|Macau|01011900|
+449|Macedonia, Ant.Rep.Iugoslava|01011900|
+450|Madagascar|01011900|
+452|Ilha Da Madeira|01011900|30042018
+455|Malasia|01011900|
+458|Malavi|01011900|
+461|Maldivas|01011900|
+464|Mali|01011900|
+467|Malta|01011900|
+472|Marianas Do Norte|01011900|
+474|Marrocos|01011900|
+476|Marshall,Ilhas|01011900|
+477|Martinica|01011900|
+485|Mauricio|01011900|
+488|Mauritania|01011900|
+489|Mayotte|01011900|
+490|Midway, Ilhas|01011900|30042018
+493|Mexico|01011900|
+494|Moldavia, Republica Da|01011900|
+495|Monaco|01011900|
+497|Mongolia|01011900|
+498|Montenegro|03062006|
+499|Micronesia|01011900|
+501|Montserrat,Ilhas|01011900|
+505|Mocambique|01011900|
+507|Namibia|01011900|
+508|Nauru|01011900|
+511|Christmas,Ilha (Navidad)|01011900|
+517|Nepal|01011900|
+521|Nicaragua|01011900|
+525|Niger|01011900|
+528|Nigeria|01011900|
+531|Niue,Ilha|01011900|
+535|Norfolk,Ilha|01011900|
+538|Noruega|01011900|
+542|Nova Caledonia|01011900|
+545|Papua Nova Guine|01011900|
+548|Nova Zelandia|01011900|
+551|Vanuatu|01011900|
+556|Oma|01011900|
+563|Pacifico,Ilhas Do (Administracao Dos EUA)|01011900|13121996
+566|Pacifico,Ilhas Do (Possessao Dos Eua)|01011900|
+569|Pacifico,Ilhas Do (Territorio Em Fideicomisso Dos|01011900|13121996
+573|Paises Baixos (Holanda)|01011900|
+575|Palau|01011900|
+576|Paquistao|01011900|
+578|Palestina|25012011|
+580|Panama|01011900|
+583|Papua Nova Guine|01121991|13121996
+586|Paraguai|01011900|
+589|Peru|01011900|
+593|Pitcairn,Ilha|01011900|
+599|Polinesia Francesa|01011900|
+603|Polonia, Republica Da|01011900|
+607|Portugal|01011900|
+611|Porto Rico|01011900|
+623|Quenia|01011900|
+625|Quirguiz, Republica|01011900|
+628|Reino Unido|01011900|
+640|Republica Centro-Africana|01011900|
+647|Republica Dominicana|01011900|
+660|Reuniao, Ilha|01011900|
+665|Zimbabue|01011900|
+670|Romenia|01011900|
+675|Ruanda|01011900|
+676|Russia, Federacao Da|01011900|
+677|Salomao, Ilhas|01011900|
+678|Saint Kitts E Nevis|01011900|27062016
+685|Saara Ocidental|01011900|
+687|El Salvador|01011900|
+690|Samoa|01011900|
+691|Samoa Americana|01011900|
+693|Sao Bartolomeu|07122015|
+695|Sao Cristovao E Neves,Ilhas|01011900|
+697|San Marino|01011900|
+698|Sao Martinho, Ilha De (Parte Francesa)|01011900|
+699|Sao Martinho, Ilha De (Parte Holandesa)|07122015|
+700|Sao Pedro E Miquelon|01011900|
+705|Sao Vicente E Granadinas|01011900|
+710|Santa Helena|01011900|
+715|Santa Lucia|01011900|
+720|Sao Tome E Principe, Ilhas|01011900|
+728|Senegal|01011900|
+731|Seychelles|01011900|
+735|Serra Leoa|01011900|
+737|Servia|03062006|
+738|Sikkim|01011900|13121996
+741|Cingapura|01011900|
+744|Siria, Republica Arabe Da|01011900|
+748|Somalia|01011900|
+750|Sri Lanka|01011900|
+754|Suazilandia|01011900|
+755|Svalbard E Jan Mayen|01011900|
+756|Africa Do Sul|01011900|
+759|Sudao|01011900|
+760|Sudao Do Sul|27052013|
+764|Suecia|01011900|
+767|Suica|01011900|
+770|Suriname|01011900|
+772|Tadjiquistao, Republica Do|01011900|
+776|Tailandia|01011900|
+780|Tanzania, Rep.Unida Da|01011900|
+781|Terras Austrais Francesas|01011900|
+782|Territorio Brit.Oc.Indico|01011900|
+783|Djibuti|01011900|
+785|Territorio da Alta Comissao do Pacifico Ocidental|01011900|13121996
+788|Chade|01011900|
+790|Tchecoslovaquia|01011900|13121996
+791|Tcheca, Republica|01011900|
+795|Timor Leste|01011900|
+800|Togo|01011900|
+805|Toquelau,Ilhas|01011900|
+810|Tonga|01011900|
+815|Trinidad E Tobago|01011900|
+820|Tunisia|01011900|
+823|Turcas E Caicos,Ilhas|01011900|
+824|Turcomenistao, Republica Do|01011900|
+827|Turquia|01011900|
+828|Tuvalu|01011900|
+831|Ucrania|01011900|
+833|Uganda|01011900|
+840|Uniao Das Republicas Socialistas Sovieticas|01011900|13121996
+845|Uruguai|01011900|
+847|Uzbequistao, Republica Do|01011900|
+848|Vaticano, Est.Da Cidade Do|01011900|
+850|Venezuela|01011900|
+855|Vietname Norte|01011900|13121996
+858|Vietna|01011900|
+863|Virgens,Ilhas (Britanicas)|01011900|
+866|Virgens,Ilhas (E.U.A.)|01011900|
+870|Fiji|01011900|
+873|Wake, Ilha|01011900|30042018
+875|Wallis E Futuna, Ilhas|01011900|
+888|Congo, Republica Democratica Do|01011900|
+890|Zambia|01011900|
+895|Zona Do Canal Do Panama|01011900|27062016
