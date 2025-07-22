@@ -1,15 +1,51 @@
 package tipos
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
+)
 
-type Cpf int
+type Cpf string
 
 func (ele Cpf) Validar() error {
+	cpf := string(ele)
+	re := regexp.MustCompile(`\D`)
+	cpf = re.ReplaceAllString(cpf, "")
+
+	if len(cpf) != 11 {
+		return errors.New("CPF deve conter 11 dígitos")
+	}
+
+	for i := 0; i < 10; i++ {
+		if cpf == strings.Repeat(strconv.Itoa(i), 11) {
+			return errors.New("CPF inválido: todos os dígitos são iguais")
+		}
+	}
+
+	for t := 9; t < 11; t++ {
+		sum := 0
+		for i := 0; i < t; i++ {
+			num, _ := strconv.Atoi(string(cpf[i]))
+			sum += num * (t + 1 - i)
+		}
+		dv := (sum * 10) % 11
+		if dv == 10 {
+			dv = 0
+		}
+		if dv != int(cpf[t]-'0') {
+			return fmt.Errorf("CPF inválido: dígito verificador %d incorreto", t-8)
+		}
+	}
+
 	return nil
 }
 
 func (ele Cpf) String() string {
-	return ""
+	return string(ele)
 }
 
 func (ele Cpf) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
@@ -17,15 +53,26 @@ func (ele Cpf) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	if err != nil {
 		return err
 	}
-	//TODO: Implementar
+	err = e.EncodeElement(ele, start)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (ele *Cpf) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	var conteudo string
+	if err := d.DecodeElement(&conteudo, &start); err != nil {
+		return err
+	}
+
+	*ele = Cpf(conteudo)
+
 	err := ele.Validar()
 	if err != nil {
 		return err
 	}
-	//TODO: Implementar
+
 	return nil
 }
