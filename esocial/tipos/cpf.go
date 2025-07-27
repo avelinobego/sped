@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-type Cpf string
+type CPF string
 
-func (ele Cpf) Validar() error {
+func (ele CPF) Validar() error {
 	cpf := string(ele)
 	re := regexp.MustCompile(`\D`)
 	cpf = re.ReplaceAllString(cpf, "")
@@ -44,16 +44,16 @@ func (ele Cpf) Validar() error {
 	return nil
 }
 
-func (ele Cpf) String() string {
+func (ele CPF) String() string {
 	return string(ele)
 }
 
-func (ele Cpf) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (ele CPF) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	err := ele.Validar()
 	if err != nil {
 		return err
 	}
-	err = e.EncodeElement(ele, start)
+	err = e.EncodeElement(string(ele), start)
 	if err != nil {
 		return err
 	}
@@ -61,13 +61,13 @@ func (ele Cpf) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return nil
 }
 
-func (ele *Cpf) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (ele *CPF) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	var conteudo string
 	if err := d.DecodeElement(&conteudo, &start); err != nil {
 		return err
 	}
 
-	*ele = Cpf(conteudo)
+	*ele = CPF(conteudo)
 
 	err := ele.Validar()
 	if err != nil {
