@@ -19,7 +19,7 @@ func TestIdeEmpregadorValidar(t *testing.T) {
 func TestIdeEmpregadorXML(t *testing.T) {
 	var cnpj tipos.CNPJ = "12345678000195"
 	idee := tipos.IdeEmpregador{
-		Tipo: &cnpj, // Valid CNPJ
+		Tipo: &cnpj, // Valid CNPJtab color
 	}
 
 	data, err := xml.Marshal(idee)
