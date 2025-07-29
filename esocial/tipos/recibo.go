@@ -37,7 +37,7 @@ func (ele NumRecibo) Validar() error {
 }
 
 func (ele NumRecibo) String() string {
-	return fmt.Sprintf("1.%d.%d", ele.Ambiente, ele.NumeroSequencial)
+	return fmt.Sprintf("1.%d.%019d", ele.Ambiente, ele.NumeroSequencial)
 }
 
 func (ele NumRecibo) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
@@ -46,8 +46,9 @@ func (ele NumRecibo) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		return err
 	}
 
-	//TODO: Implementar
+	value := ele.String()
 
+	e.EncodeElement(value, start)
 	return nil
 }
 
@@ -57,9 +58,13 @@ func (ele NumRecibo) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error 
 		return err
 	}
 
-	//TODO: Implementar
+	n, err := fmt.Sscanf(conteudo, "1.%d.%019d", &ele.Ambiente, &ele.NumeroSequencial)
+	if err != nil || n != 2 {
+		return fmt.Errorf("formato inválido para NumRecibo: %s", conteudo)
+	}
 
-	err := ele.Validar()
+	// Validar os dados após a leitura
+	err = ele.Validar()
 	if err != nil {
 		return err
 	}

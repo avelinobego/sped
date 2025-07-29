@@ -10,6 +10,4 @@ type Recepcao struct {
 	DhRecepcao     time.Time          `xml:"dhRecepcao"`
 	VersaoApp      string             `xml:"versaoAppRecepcao"`
 	ProtocoloEnvio string             `xml:"protocoloEnvioLote,omitempty"`
-	Ocorrencias    []Ocorrencia       `xml:"ocorrencia,omitempty"`
-	// Recibo Recibo `xml:"recibo,omitempty"``
 }
