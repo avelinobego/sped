@@ -7,4 +7,5 @@ type RetornoEvento struct {
 	IdeEmpregador tipos.IdeEmpregador `xml:"ideEmpregador"`
 	Recepcao      Recepcao            `xml:"recepcao"`
 	Processamento Processamento       `xml:"processamento"`
+	Recibo        Recibo              `xml:"recibo,omitempty"`
 }
