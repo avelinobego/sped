@@ -8,7 +8,7 @@ import (
 
 func TestIdeEmpregadorValidar(t *testing.T) {
 	cnpj := tipos.CNPJ("12345678000195")
-	idee := tipos.IdeEmpregador{
+	idee := tipos.IdentificadorPorDocumento{
 		Tipo: &cnpj, // Valid CNPJ
 	}
 	if err := idee.Validar(); err != nil {
@@ -18,7 +18,7 @@ func TestIdeEmpregadorValidar(t *testing.T) {
 
 func TestIdeEmpregadorXML(t *testing.T) {
 	var cnpj tipos.CNPJ = "12345678000195"
-	idee := tipos.IdeEmpregador{
+	idee := tipos.IdentificadorPorDocumento{
 		Tipo: &cnpj, // Valid CNPJtab color
 	}
 

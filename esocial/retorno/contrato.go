@@ -6,9 +6,9 @@ import (
 )
 
 type Contrato struct {
-	XMLName         xml.Name              `xml:"contrato"`
-	IdeEmpregador   tipos.IdeEmpregador   `xml:"ideEpregador"`
-	IdeTrabalhador  tipos.IdeTrabalhador  `xml:"trabalhador"`
-	InfoDeficiencia tipos.InfoDeficiencia `xml:"infoDeficiencia,omitempty"`
-	Vinculo         tipos.Vinculo         `xml:"vinculo"`
+	XMLName         xml.Name                        `xml:"contrato"`
+	IdeEmpregador   tipos.IdentificadorPorDocumento `xml:"ideEpregador"`
+	IdeTrabalhador  tipos.IdeTrabalhador            `xml:"trabalhador"`
+	InfoDeficiencia tipos.InfoDeficiencia           `xml:"infoDeficiencia,omitempty"`
+	Vinculo         tipos.Vinculo                   `xml:"vinculo"`
 }

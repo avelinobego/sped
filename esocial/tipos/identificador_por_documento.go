@@ -5,11 +5,11 @@ import (
 	"errors"
 )
 
-type IdeEmpregador struct {
-	Tipo Validavel
+type IdentificadorPorDocumento struct {
+	Tipo XmlValueBase
 }
 
-func (ele IdeEmpregador) Validar() error {
+func (ele IdentificadorPorDocumento) Validar() error {
 	switch t := ele.Tipo.(type) {
 	case *CNPJ:
 		if err := t.Validar(); err != nil {
@@ -25,11 +25,11 @@ func (ele IdeEmpregador) Validar() error {
 	return nil
 }
 
-func (ele IdeEmpregador) String() string {
+func (ele IdentificadorPorDocumento) String() string {
 	return ele.Tipo.String()
 }
 
-func (ele IdeEmpregador) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (ele IdentificadorPorDocumento) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	err := ele.Validar()
 	if err != nil {
 		return err
@@ -70,7 +70,7 @@ func (ele IdeEmpregador) MarshalXML(e *xml.Encoder, start xml.StartElement) erro
 	return nil
 }
 
-func (ele *IdeEmpregador) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (ele *IdentificadorPorDocumento) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	if err := d.DecodeElement(ele, &start); err != nil {
 		return err
 	}

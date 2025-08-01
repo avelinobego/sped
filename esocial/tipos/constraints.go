@@ -2,7 +2,7 @@ package tipos
 
 import "encoding/xml"
 
-type Validavel interface {
+type XmlValueBase interface {
 	Validar() error
 	String() string
 	MarshalXML(e *xml.Encoder, start xml.StartElement) error
