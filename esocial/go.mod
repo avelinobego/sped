@@ -1,3 +1,3 @@
-module avelinobego/esocial
+module github.com/avelinobego/esocial
 
-go 1.24.5
+go 1.25.0

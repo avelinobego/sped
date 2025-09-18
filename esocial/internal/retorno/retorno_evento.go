@@ -1,0 +1,11 @@
+package retorno
+
+import "github.com/avelinobego/esocial/internal/tipos"
+
+type RetornoEvento struct {
+	Id            tipos.IdeEvento                 `xml:"Id,attr"`
+	IdeEmpregador tipos.IdentificadorPorDocumento `xml:"ideEmpregador"`
+	Recepcao      Recepcao                        `xml:"recepcao"`
+	Processamento Processamento                   `xml:"processamento"`
+	Recibo        Recibo                          `xml:"recibo,omitempty"`
+}
