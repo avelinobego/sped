@@ -1,0 +1,14 @@
+package entity
+
+type Remunavnp struct {
+	Tpinsc     int64   `xml:"tpInsc"`
+	Nrinsc     string  `xml:"nrInsc"`
+	Codlotacao string  `xml:"codLotacao"`
+	Vrbccp00   float64 `xml:"vrBcCp00"`
+	Vrbccp15   float64 `xml:"vrBcCp15"`
+	Vrbccp20   float64 `xml:"vrBcCp20"`
+	Vrbccp25   float64 `xml:"vrBcCp25"`
+	Vrbccp13   float64 `xml:"vrBcCp13"`
+	Vrbcfgts   float64 `xml:"vrBcFgts"`
+	Vrdesccp   float64 `xml:"vrDescCP"`
+}
