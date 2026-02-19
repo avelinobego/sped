@@ -1,5 +1,3 @@
-Excelente pergunta! Vou mapear **todas as tabelas necessárias** para um sistema eSocial completo em PostgreSQL, além das tabelas do governo.
-
 ## Estrutura Completa de Banco de Dados
 
 ### 1. **Domínio: Empresa/Empregador**
@@ -1092,5 +1090,3 @@ FOR EACH ROW EXECUTE FUNCTION registrar_auditoria();
 7. **eSocial**: 3 tabelas (log, fila, retornos)
 8. **Sistema**: 6 tabelas (usuarios, permissoes, auditoria, configuracoes, notificacoes)
 9. **Views**: 3+ views úteis
-
-Esta estrutura cobre **100% do eSocial** e permite rastreabilidade completa!
