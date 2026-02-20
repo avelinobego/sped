@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS cargos;
+DROP TABLE IF EXISTS lotacoes;
+DROP TABLE IF EXISTS rubricas;
+DROP TABLE IF EXISTS estabelecimentos;
+DROP TABLE IF EXISTS empresas;
