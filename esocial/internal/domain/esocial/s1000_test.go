@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/avelinobego/esocial/internal/shared/esocial"
+	"github.com/avelinobego/esocial/internal/domain/esocial"
 )
 
 func TestS1000(t *testing.T) {
