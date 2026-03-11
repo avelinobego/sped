@@ -6,9 +6,7 @@ import (
 )
 
 func init() {
-
 	configureLogger()
-
 }
 
 func configureLogger() {
