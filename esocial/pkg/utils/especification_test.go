@@ -31,7 +31,7 @@ func TestIsActiveCustomer(t *testing.T) {
 		LastPurchase:   time.Now().Add(-5 * 30 * 24 * time.Hour),
 	}
 
-	eligibleSpec := util.And(IsPremiumCustomer, IsActiveCustomer)
+	eligibleSpec := utils.And(IsPremiumCustomer, IsActiveCustomer)
 	if eligibleSpec(customer) {
 		fmt.Println("applyDiscount(customer)")
 	}
