@@ -859,3 +859,273 @@ func TestServiceRepoErrorBranches(t *testing.T) {
 		t.Fatal("expected error from ListCargos when repo fails")
 	}
 }
+
+func TestServiceFetchErrorPaths(t *testing.T) {
+	s, repo := setupService()
+
+	// Set up a empresa for testing
+	repo.CreateEmpresa(&Empresa{
+		ID: "test-emp", CNPJ: "55555555000155", RazaoSocial: "Test",
+		TipoInscricao: "1", ClassificacaoTributaria: "01",
+		IndCooperativa: "N", IndConstrutora: "N", IndDesoneracao: "N",
+		Situacao: "ATIVA", DataCadastro: time.Now().UTC(), DataAtualizacao: time.Now().UTC(),
+	})
+
+	// Test GetEmpresaByID error path (repo error)
+	repo.errors = map[string]error{"GetEmpresaByID": errors.New("db connection error")}
+	if _, err := s.GetEmpresaByID("test-emp"); err == nil {
+		t.Fatal("expected error from GetEmpresaByID when repo fails")
+	}
+
+	// Test UpdateEmpresa error path: GetEmpresaByID fails on initial check
+	repo.errors = map[string]error{"GetEmpresaByID": errors.New("db connection error")}
+	if _, err := s.UpdateEmpresa("test-emp", &UpdateEmpresaRequest{RazaoSocial: ptrString("Updated")}); err == nil {
+		t.Fatal("expected error from UpdateEmpresa when initial GetEmpresaByID fails")
+	}
+
+	// Test DeleteEmpresa error path: GetEmpresaByID fails on initial check
+	repo.errors = map[string]error{"GetEmpresaByID": errors.New("db connection error")}
+	if err := s.DeleteEmpresa("test-emp"); err == nil {
+		t.Fatal("expected error from DeleteEmpresa when GetEmpresaByID fails")
+	}
+
+	// Test UpdateEmpresa error path: UpdateEmpresa repo call fails
+	repo.errors = map[string]error{"UpdateEmpresa": errors.New("db update error")}
+	if _, err := s.UpdateEmpresa("test-emp", &UpdateEmpresaRequest{RazaoSocial: ptrString("Updated")}); err == nil {
+		t.Fatal("expected error from UpdateEmpresa when repo update fails")
+	}
+
+	// Test UpdateEmpresa error path: Fetch after update fails
+	repo.errors = map[string]error{"GetEmpresaByID": errors.New("db fetch error after update")}
+	if _, err := s.UpdateEmpresa("test-emp", &UpdateEmpresaRequest{RazaoSocial: ptrString("Updated")}); err == nil {
+		t.Fatal("expected error from UpdateEmpresa when fetch after update fails")
+	}
+
+	// Test DeleteEmpresa error path: Delete call fails
+	repo.errors = map[string]error{"DeleteEmpresa": errors.New("db delete error")}
+	if err := s.DeleteEmpresa("test-emp"); err == nil {
+		t.Fatal("expected error from DeleteEmpresa when repo delete fails")
+	}
+}
+
+func TestServiceEstabelecimentoErrorPaths(t *testing.T) {
+	s, repo := setupService()
+
+	// Set up empresa and estabelecimento
+	repo.CreateEmpresa(&Empresa{
+		ID: "emp1", CNPJ: "77777777000177", RazaoSocial: "E",
+		TipoInscricao: "1", ClassificacaoTributaria: "01",
+		IndCooperativa: "N", IndConstrutora: "N", IndDesoneracao: "N",
+		Situacao: "ATIVA", DataCadastro: time.Now().UTC(), DataAtualizacao: time.Now().UTC(),
+	})
+
+	repo.CreateEstabelecimento(&Estabelecimento{
+		ID: "est1", EmpresaID: "emp1", TipoInscricao: "1",
+		NumeroInscricao: "12345", IndObra: "N",
+		Situacao: "ATIVO", DataCadastro: time.Now().UTC(),
+	})
+
+	// Test GetEstabelecimentoByID error path
+	repo.errors = map[string]error{"GetEstabelecimentoByID": errors.New("db error")}
+	if _, err := s.GetEstabelecimentoByID("est1"); err == nil {
+		t.Fatal("expected error from GetEstabelecimentoByID when repo fails")
+	}
+
+	// Test UpdateEstabelecimento error path: GetEstabelecimentoByID fails
+	repo.errors = map[string]error{"GetEstabelecimentoByID": errors.New("db error")}
+	if _, err := s.UpdateEstabelecimento("est1", &UpdateEstabelecimentoRequest{Situacao: ptrString("INATIVO")}); err == nil {
+		t.Fatal("expected error from UpdateEstabelecimento when initial get fails")
+	}
+
+	// Test UpdateEstabelecimento error path: UpdateEstabelecimento fails
+	repo.errors = map[string]error{"UpdateEstabelecimento": errors.New("db update error")}
+	if _, err := s.UpdateEstabelecimento("est1", &UpdateEstabelecimentoRequest{Situacao: ptrString("INATIVO")}); err == nil {
+		t.Fatal("expected error from UpdateEstabelecimento when repo update fails")
+	}
+
+	// Test DeleteEstabelecimento error path: GetEstabelecimentoByID fails
+	repo.errors = map[string]error{"GetEstabelecimentoByID": errors.New("db error")}
+	if err := s.DeleteEstabelecimento("est1"); err == nil {
+		t.Fatal("expected error from DeleteEstabelecimento when get fails")
+	}
+
+	// Test DeleteEstabelecimento error path: DeleteEstabelecimento fails
+	repo.errors = map[string]error{"DeleteEstabelecimento": errors.New("db delete error")}
+	if err := s.DeleteEstabelecimento("est1"); err == nil {
+		t.Fatal("expected error from DeleteEstabelecimento when delete fails")
+	}
+}
+
+func TestServiceRubricaErrorPaths(t *testing.T) {
+	s, repo := setupService()
+
+	repo.CreateEmpresa(&Empresa{
+		ID: "emp2", CNPJ: "88888888000188", RazaoSocial: "E2",
+		TipoInscricao: "1", ClassificacaoTributaria: "01",
+		IndCooperativa: "N", IndConstrutora: "N", IndDesoneracao: "N",
+		Situacao: "ATIVA", DataCadastro: time.Now().UTC(), DataAtualizacao: time.Now().UTC(),
+	})
+
+	repo.CreateRubrica(&Rubrica{
+		ID: "rub1", EmpresaID: "emp2", Codigo: "R01", Descricao: "desc",
+		NaturezaRubrica: "0001", TipoRubrica: "D", Ativa: true,
+		DataCadastro: time.Now().UTC(), DataInicioValidade: time.Now().UTC(),
+	})
+
+	// Test GetRubricaByID error path
+	repo.errors = map[string]error{"GetRubricaByID": errors.New("db error")}
+	if _, err := s.GetRubricaByID("rub1"); err == nil {
+		t.Fatal("expected error from GetRubricaByID when repo fails")
+	}
+
+	// Test UpdateRubrica error path: GetRubricaByID fails initially
+	repo.errors = map[string]error{"GetRubricaByID": errors.New("db error")}
+	if _, err := s.UpdateRubrica("rub1", &UpdateRubricaRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateRubrica when initial get fails")
+	}
+
+	// Test UpdateRubrica error path: UpdateRubrica fails
+	repo.errors = map[string]error{"UpdateRubrica": errors.New("db update error")}
+	if _, err := s.UpdateRubrica("rub1", &UpdateRubricaRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateRubrica when repo update fails")
+	}
+
+	// Test DeleteRubrica error path: GetRubricaByID fails
+	repo.errors = map[string]error{"GetRubricaByID": errors.New("db error")}
+	if err := s.DeleteRubrica("rub1"); err == nil {
+		t.Fatal("expected error from DeleteRubrica when get fails")
+	}
+
+	// Test DeleteRubrica error path: DeleteRubrica fails
+	repo.errors = map[string]error{"DeleteRubrica": errors.New("db delete error")}
+	if err := s.DeleteRubrica("rub1"); err == nil {
+		t.Fatal("expected error from DeleteRubrica when delete fails")
+	}
+}
+
+func TestServiceLotacaoErrorPaths(t *testing.T) {
+	s, repo := setupService()
+
+	repo.CreateEmpresa(&Empresa{
+		ID: "emp3", CNPJ: "99999999000199", RazaoSocial: "E3",
+		TipoInscricao: "1", ClassificacaoTributaria: "01",
+		IndCooperativa: "N", IndConstrutora: "N", IndDesoneracao: "N",
+		Situacao: "ATIVA", DataCadastro: time.Now().UTC(), DataAtualizacao: time.Now().UTC(),
+	})
+
+	repo.CreateLotacao(&Lotacao{
+		ID: "lot1", EmpresaID: "emp3", Codigo: "L01", Descricao: "desc",
+		TipoLotacao: "01", Ativa: true,
+		DataCadastro: time.Now().UTC(), DataInicioValidade: time.Now().UTC(),
+	})
+
+	// Test GetLotacaoByID error path
+	repo.errors = map[string]error{"GetLotacaoByID": errors.New("db error")}
+	if _, err := s.GetLotacaoByID("lot1"); err == nil {
+		t.Fatal("expected error from GetLotacaoByID when repo fails")
+	}
+
+	// Test UpdateLotacao error path: GetLotacaoByID fails initially
+	repo.errors = map[string]error{"GetLotacaoByID": errors.New("db error")}
+	if _, err := s.UpdateLotacao("lot1", &UpdateLotacaoRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateLotacao when initial get fails")
+	}
+
+	// Test UpdateLotacao error path: UpdateLotacao fails
+	repo.errors = map[string]error{"UpdateLotacao": errors.New("db update error")}
+	if _, err := s.UpdateLotacao("lot1", &UpdateLotacaoRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateLotacao when repo update fails")
+	}
+
+	// Test DeleteLotacao error path: GetLotacaoByID fails
+	repo.errors = map[string]error{"GetLotacaoByID": errors.New("db error")}
+	if err := s.DeleteLotacao("lot1"); err == nil {
+		t.Fatal("expected error from DeleteLotacao when get fails")
+	}
+
+	// Test DeleteLotacao error path: DeleteLotacao fails
+	repo.errors = map[string]error{"DeleteLotacao": errors.New("db delete error")}
+	if err := s.DeleteLotacao("lot1"); err == nil {
+		t.Fatal("expected error from DeleteLotacao when delete fails")
+	}
+}
+
+func TestServiceCargoErrorPaths(t *testing.T) {
+	s, repo := setupService()
+
+	repo.CreateEmpresa(&Empresa{
+		ID: "emp4", CNPJ: "11111111111111", RazaoSocial: "E4",
+		TipoInscricao: "1", ClassificacaoTributaria: "01",
+		IndCooperativa: "N", IndConstrutora: "N", IndDesoneracao: "N",
+		Situacao: "ATIVA", DataCadastro: time.Now().UTC(), DataAtualizacao: time.Now().UTC(),
+	})
+
+	repo.CreateCargo(&Cargo{
+		ID: "car1", EmpresaID: "emp4", Codigo: "C01", Descricao: "desc",
+		CBO: "123456", Ativo: true,
+		DataCadastro: time.Now().UTC(), DataInicioValidade: time.Now().UTC(),
+	})
+
+	// Test GetCargoByID error path
+	repo.errors = map[string]error{"GetCargoByID": errors.New("db error")}
+	if _, err := s.GetCargoByID("car1"); err == nil {
+		t.Fatal("expected error from GetCargoByID when repo fails")
+	}
+
+	// Test UpdateCargo error path: GetCargoByID fails initially
+	repo.errors = map[string]error{"GetCargoByID": errors.New("db error")}
+	if _, err := s.UpdateCargo("car1", &UpdateCargoRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateCargo when initial get fails")
+	}
+
+	// Test UpdateCargo error path: UpdateCargo fails
+	repo.errors = map[string]error{"UpdateCargo": errors.New("db update error")}
+	if _, err := s.UpdateCargo("car1", &UpdateCargoRequest{Descricao: ptrString("new")}); err == nil {
+		t.Fatal("expected error from UpdateCargo when repo update fails")
+	}
+
+	// Test DeleteCargo error path: GetCargoByID fails
+	repo.errors = map[string]error{"GetCargoByID": errors.New("db error")}
+	if err := s.DeleteCargo("car1"); err == nil {
+		t.Fatal("expected error from DeleteCargo when get fails")
+	}
+
+	// Test DeleteCargo error path: DeleteCargo fails
+	repo.errors = map[string]error{"DeleteCargo": errors.New("db delete error")}
+	if err := s.DeleteCargo("car1"); err == nil {
+		t.Fatal("expected error from DeleteCargo when delete fails")
+	}
+}
+
+func TestServiceCNPJValidation(t *testing.T) {
+	s, _ := setupService()
+
+	tests := []struct {
+		name    string
+		cnpj    string
+		wantErr bool
+	}{
+		{"valid cnpj format", "11222333000181", false},
+		{"invalid cnpj format too short", "12345", true},
+		{"invalid cnpj text", "abcdefghijklmn", true},
+		{"invalid cnpj contains letters", "1234567800a199", true},
+		{"empty cnpj", "", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := s.CreateEmpresa(&CreateEmpresaRequest{
+				CNPJ:                    tt.cnpj,
+				RazaoSocial:             "Test",
+				TipoInscricao:           "1",
+				ClassificacaoTributaria: "01",
+				IndCooperativa:          "N",
+				IndConstrutora:          "N",
+				IndDesoneracao:          "N",
+			})
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CreateEmpresa() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
