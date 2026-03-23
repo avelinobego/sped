@@ -105,6 +105,10 @@ func (s *TrabalhadorService) GetByID(ctx context.Context, id string) (*Trabalhad
 		return nil, err
 	}
 
+	if trabalhador == nil {
+		return nil, nil
+	}
+
 	response := s.entityToResponse(trabalhador)
 	return response, nil
 }
@@ -114,6 +118,10 @@ func (s *TrabalhadorService) GetByCPF(ctx context.Context, cpf string) (*Trabalh
 	trabalhador, err := s.repo.GetByCPF(ctx, cpf)
 	if err != nil {
 		return nil, err
+	}
+
+	if trabalhador == nil {
+		return nil, nil
 	}
 
 	response := s.entityToResponse(trabalhador)
@@ -126,6 +134,10 @@ func (s *TrabalhadorService) Update(ctx context.Context, id string, req *UpdateT
 	trabalhador, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	if trabalhador == nil {
+		return nil, nil
 	}
 
 	// Apply updates
