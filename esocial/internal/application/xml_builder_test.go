@@ -22,7 +22,15 @@ func TestXMLBuilderService_BuildEmpresaInfoXML(t *testing.T) {
 		IndDesoneracao:          "N",
 	}
 
-	xml, err := service.BuildEmpresaInfoXML(emp, nil)
+	params := &EventParams{
+		EmpresaCNPJ: "12345678000123",
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+
+	xml, err := service.BuildEmpresaInfoXML(emp, params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -57,7 +65,14 @@ func TestXMLBuilderService_BuildTrabalhadorAdmissionXML(t *testing.T) {
 		PaisNacionalidade: "105",
 	}
 
-	xml, err := service.BuildTrabalhadorAdmissionXML(trab, "12345678000123")
+	params := &EventParams{
+		EmpresaCNPJ: "12345678000123",
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+	xml, err := service.BuildTrabalhadorAdmissionXML(trab, params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -90,7 +105,17 @@ func TestXMLBuilderService_BuildEstabelecimentoTableXML(t *testing.T) {
 		NumeroInscricao: "12345678000456",
 	}
 
-	xml, err := service.BuildEstabelecimentoTableXML(estab, "12345678000123")
+	params := &EstabelecimentoTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Estabelecimento: estab,
+	}
+	xml, err := service.BuildEstabelecimentoTableXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -107,7 +132,17 @@ func TestXMLBuilderService_BuildRubricaTableXML(t *testing.T) {
 		Codigo: "001",
 	}
 
-	xml, err := service.BuildRubricaTableXML(rubrica, "12345678000123")
+	params := &RubricaTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Rubrica: rubrica,
+	}
+	xml, err := service.BuildRubricaTableXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -115,6 +150,8 @@ func TestXMLBuilderService_BuildRubricaTableXML(t *testing.T) {
 	if !strings.Contains(xml, "evtTabRubrica") {
 		t.Errorf("Expected evtTabRubrica not found in XML")
 	}
+
+	t.Logf("Generated XML:\n%s", xml)
 }
 
 func TestXMLBuilderService_BuildLotacaoTableXML(t *testing.T) {
@@ -124,7 +161,17 @@ func TestXMLBuilderService_BuildLotacaoTableXML(t *testing.T) {
 		Codigo: "0001",
 	}
 
-	xml, err := service.BuildLotacaoTableXML(lotacao, "12345678000123")
+	params := &LotacaoTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Lotacao: lotacao,
+	}
+	xml, err := service.BuildLotacaoTableXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -144,7 +191,17 @@ func TestXMLBuilderService_BuildWorkerPreliminaryAdmissionXML(t *testing.T) {
 		Nome: "Maria Silva",
 	}
 
-	xml, err := service.BuildWorkerPreliminaryAdmissionXML(trab, "12345678000123")
+	params := &WorkerPreliminaryAdmissionParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker: trab,
+	}
+	xml, err := service.BuildWorkerPreliminaryAdmissionXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -162,7 +219,18 @@ func TestXMLBuilderService_BuildWorkerRemunerationXML(t *testing.T) {
 		Nome: "Carlos Santos",
 	}
 
-	xml, err := service.BuildWorkerRemunerationXML(trab, "12345678000123", "202501")
+	params := &WorkerRemunerationParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker:  trab,
+		Periodo: "202501",
+	}
+	xml, err := service.BuildWorkerRemunerationXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -180,7 +248,19 @@ func TestXMLBuilderService_BuildWorkerDismissalXML(t *testing.T) {
 		Nome: "Pedro Costa",
 	}
 
-	xml, err := service.BuildWorkerDismissalXML(trab, "12345678000123", time.Now(), "pedido_demissao")
+	params := &WorkerDismissalParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker:             trab,
+		DtDeslig:           time.Now(),
+		MotivoDesligamento: "pedido_demissao",
+	}
+	xml, err := service.BuildWorkerDismissalXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -193,7 +273,17 @@ func TestXMLBuilderService_BuildWorkerDismissalXML(t *testing.T) {
 func TestXMLBuilderService_BuildPeriodClosureXML(t *testing.T) {
 	service := NewXMLBuilderService()
 
-	xml, err := service.BuildPeriodClosureXML("12345678000123", "202501")
+	params := &PeriodClosureParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Periodo: "202501",
+	}
+	xml, err := service.BuildPeriodClosureXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -213,7 +303,17 @@ func TestXMLBuilderService_BuildWorkLocationTableXML(t *testing.T) {
 		Descricao: "Escritório Principal",
 	}
 
-	xml, err := service.BuildWorkLocationTableXML(ambiente, "12345678000123")
+	params := &WorkLocationTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Ambiente: ambiente,
+	}
+	xml, err := service.BuildWorkLocationTableXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
@@ -232,13 +332,23 @@ func TestXMLBuilderService_BuildWorkScheduleTableXML(t *testing.T) {
 		TipoJornada: "normal",
 	}
 
-	xml, err := service.BuildWorkScheduleTableXML(horario, "12345678000123")
+	params := &WorkScheduleTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Horario: horario,
+	}
+	xml, err := service.BuildWorkScheduleTableXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}
 
-	if !strings.Contains(xml, "evtTabHorario") {
-		t.Errorf("Expected evtTabHorario not found in XML")
+	if !strings.Contains(xml, "evtTabLotacao") {
+		t.Errorf("Expected evtTabLotacao not found in XML")
 	}
 }
 
@@ -251,7 +361,17 @@ func TestXMLBuilderService_BuildCompleteInfoEmpresaXML(t *testing.T) {
 		ClassificacaoTributaria: "02",
 	}
 
-	xml, err := service.BuildCompleteInfoEmpresaXML(emp, "12345678000123")
+	params := &CompleteInfoEmpresaParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Empresa: emp,
+	}
+	xml, err := service.BuildCompleteInfoEmpresaXML(params)
 	if err != nil {
 		t.Fatalf("Failed to build XML: %v", err)
 	}

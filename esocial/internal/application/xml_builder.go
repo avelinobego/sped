@@ -17,7 +17,8 @@ import (
 // Usage:
 //
 //	service := NewXMLBuilderService()
-//	xml, err := service.BuildEmpresaInfoXML(empresa, nil)
+//	params := &EventParams{EmpresaCNPJ: "12345678000123", TpAmb: 1, ProcEmi: 1, VerProc: "1.0.0", TpInsc: 1}
+//	xml, err := service.BuildEmpresaInfoXML(empresa, params)
 type XMLBuilderService struct{}
 
 // NewXMLBuilderService creates a new XML builder service
@@ -27,22 +28,19 @@ func NewXMLBuilderService() *XMLBuilderService {
 
 // BuildEmpresaInfoXML builds XML for empresa info event (S-1000).
 // This event is used to register or update company information in eSocial.
-// Parameters:
-//   - emp: The company entity from the domain
-//   - estabs: Optional list of establishments (currently not implemented in basic version)
 //
 // Returns the XML string with proper encoding header
-func (s *XMLBuilderService) BuildEmpresaInfoXML(emp *empresa.Empresa, estabs []*empresa.Estabelecimento) (string, error) {
+func (s *XMLBuilderService) BuildEmpresaInfoXML(emp *empresa.Empresa, params *EventParams) (string, error) {
 	// Create the event
 	event := &esocial.Evtinfoempregador{
 		Id: "ID123456789", // This should be generated properly
 		Ideevento: esocial.Ideevento{
-			Tpamb:   1, // Production environment
-			Procemi: 1, // Application
-			Verproc: "1.0.0",
+			Tpamb:   params.TpAmb,
+			Procemi: params.ProcEmi,
+			Verproc: params.VerProc,
 		},
 		Ideempregador: esocial.Ideempregador{
-			Tpinsc: 1, // CNPJ
+			Tpinsc: params.TpInsc,
 			Nrinsc: emp.CNPJ,
 		},
 		Infoempregador: esocial.Infoempregador{
@@ -89,23 +87,20 @@ func (s *XMLBuilderService) BuildEmpresaInfoXML(emp *empresa.Empresa, estabs []*
 
 // BuildTrabalhadorAdmissionXML builds XML for trabalhador admission event (S-2200).
 // This event is used to register a new employee admission in eSocial.
-// Parameters:
-//   - trab: The worker entity from the domain
-//   - empresaCNPJ: The CNPJ of the employing company
 //
 // Returns the XML string with proper encoding header
-func (s *XMLBuilderService) BuildTrabalhadorAdmissionXML(trab *trabalhador.Trabalhador, empresaCNPJ string) (string, error) {
+func (s *XMLBuilderService) BuildTrabalhadorAdmissionXML(trab *trabalhador.Trabalhador, params *EventParams) (string, error) {
 	// Create the admission event
 	event := &esocial.Evtadmissao{
 		Id: "ID123456789", // Should be generated properly
 		Ideevento: esocial.Ideevento{
-			Tpamb:   1, // Production
-			Procemi: 1, // Application
-			Verproc: "1.0.0",
+			Tpamb:   params.TpAmb,
+			Procemi: params.ProcEmi,
+			Verproc: params.VerProc,
 		},
 		Ideempregador: esocial.Ideempregador{
-			Tpinsc: 1, // CNPJ
-			Nrinsc: empresaCNPJ,
+			Tpinsc: params.TpInsc,
+			Nrinsc: params.EmpresaCNPJ,
 		},
 		Trabalhador: esocial.Trabalhador{
 			Cpftrab: trab.CPF,
@@ -113,25 +108,10 @@ func (s *XMLBuilderService) BuildTrabalhadorAdmissionXML(trab *trabalhador.Traba
 			Sexo:    trab.Sexo,
 			Racacor: func() int64 {
 				if trab.RacaCor != nil {
-					// Convert string to int64 based on eSocial codes
-					switch *trab.RacaCor {
-					case "1":
-						return 1 // Branca
-					case "2":
-						return 2 // Preta
-					case "3":
-						return 3 // Parda
-					case "4":
-						return 4 // Amarela
-					case "5":
-						return 5 // Indígena
-					case "6":
-						return 6 // Não informado
-					default:
-						return 6
-					}
+					// Convert string to RacaCor enumeration
+					return ParseRacaCor(*trab.RacaCor).ToInt64()
 				}
-				return 6 // Default
+				return RacaCorNãoInformado.ToInt64() // Default
 			}(),
 			Grauinstr: func() string {
 				if trab.GrauInstrucao != nil {
