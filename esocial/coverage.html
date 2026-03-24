@@ -1,0 +1,2983 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>empresa: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/avelinobego/esocial/internal/domain/empresa/handler.go (0.0%)</option>
+				
+				<option value="file1">github.com/avelinobego/esocial/internal/domain/empresa/service.go (84.7%)</option>
+				
+				<option value="file2">github.com/avelinobego/esocial/internal/domain/trabalhador/handler.go (0.0%)</option>
+				
+				<option value="file3">github.com/avelinobego/esocial/internal/domain/trabalhador/postgres.go (0.0%)</option>
+				
+				<option value="file4">github.com/avelinobego/esocial/internal/domain/trabalhador/service.go (0.0%)</option>
+				
+				<option value="file5">github.com/avelinobego/esocial/internal/domain/trabalhador/usecase.go (98.1%)</option>
+				
+				<option value="file6">github.com/avelinobego/esocial/internal/usecase/empresa/usecase.go (13.7%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package empresa
+
+import (
+        "encoding/json"
+        "net/http"
+        "strconv"
+
+        "github.com/gorilla/mux"
+)
+
+// Handler defines the HTTP handlers for empresa operations
+type Handler struct {
+        service *Service
+}
+
+// NewHandler creates a new empresa handler
+func NewHandler(service *Service) *Handler <span class="cov0" title="0">{
+        return &amp;Handler{service: service}
+}</span>
+
+// Empresa Handlers
+
+// CreateEmpresa handles POST /empresas
+func (h *Handler) CreateEmpresa(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateEmpresaRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.CreateEmpresa(&amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrInvalidCNPJ || err == ErrEmpresaAlreadyExists </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusBadRequest)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetEmpresa handles GET /empresas/{id}
+func (h *Handler) GetEmpresa(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetEmpresaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEmpresaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateEmpresa handles PUT /empresas/{id}
+func (h *Handler) UpdateEmpresa(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateEmpresaRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.UpdateEmpresa(id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEmpresaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteEmpresa handles DELETE /empresas/{id}
+func (h *Handler) DeleteEmpresa(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.DeleteEmpresa(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEmpresaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListEmpresas handles GET /empresas
+func (h *Handler) ListEmpresas(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if ativoStr := r.URL.Query().Get("ativo"); ativoStr != "" </span><span class="cov0" title="0">{
+                if ativo, err := strconv.ParseBool(ativoStr); err == nil </span><span class="cov0" title="0">{
+                        req.Ativo = &amp;ativo
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.ListEmpresas(req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// Estabelecimento Handlers
+
+// CreateEstabelecimento handles POST /estabelecimentos
+func (h *Handler) CreateEstabelecimento(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateEstabelecimentoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.CreateEstabelecimento(&amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetEstabelecimento handles GET /estabelecimentos/{id}
+func (h *Handler) GetEstabelecimento(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetEstabelecimentoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEstabelecimentoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateEstabelecimento handles PUT /estabelecimentos/{id}
+func (h *Handler) UpdateEstabelecimento(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateEstabelecimentoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.UpdateEstabelecimento(id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEstabelecimentoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteEstabelecimento handles DELETE /estabelecimentos/{id}
+func (h *Handler) DeleteEstabelecimento(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.DeleteEstabelecimento(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrEstabelecimentoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListEstabelecimentos handles GET /estabelecimentos
+func (h *Handler) ListEstabelecimentos(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if ativoStr := r.URL.Query().Get("ativo"); ativoStr != "" </span><span class="cov0" title="0">{
+                if ativo, err := strconv.ParseBool(ativoStr); err == nil </span><span class="cov0" title="0">{
+                        req.Ativo = &amp;ativo
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.ListEstabelecimentos(req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// Rubrica Handlers
+
+// CreateRubrica handles POST /rubricas
+func (h *Handler) CreateRubrica(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateRubricaRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.CreateRubrica(&amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetRubrica handles GET /rubricas/{id}
+func (h *Handler) GetRubrica(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetRubricaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrRubricaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateRubrica handles PUT /rubricas/{id}
+func (h *Handler) UpdateRubrica(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateRubricaRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.UpdateRubrica(id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrRubricaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteRubrica handles DELETE /rubricas/{id}
+func (h *Handler) DeleteRubrica(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.DeleteRubrica(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrRubricaNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListRubricas handles GET /rubricas
+func (h *Handler) ListRubricas(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if ativoStr := r.URL.Query().Get("ativo"); ativoStr != "" </span><span class="cov0" title="0">{
+                if ativo, err := strconv.ParseBool(ativoStr); err == nil </span><span class="cov0" title="0">{
+                        req.Ativo = &amp;ativo
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.ListRubricas(req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// Lotacao Handlers
+
+// CreateLotacao handles POST /lotacoes
+func (h *Handler) CreateLotacao(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateLotacaoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.CreateLotacao(&amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetLotacao handles GET /lotacoes/{id}
+func (h *Handler) GetLotacao(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetLotacaoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrLotacaoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateLotacao handles PUT /lotacoes/{id}
+func (h *Handler) UpdateLotacao(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateLotacaoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.UpdateLotacao(id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrLotacaoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteLotacao handles DELETE /lotacoes/{id}
+func (h *Handler) DeleteLotacao(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.DeleteLotacao(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrLotacaoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListLotacoes handles GET /lotacoes
+func (h *Handler) ListLotacoes(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if ativoStr := r.URL.Query().Get("ativo"); ativoStr != "" </span><span class="cov0" title="0">{
+                if ativo, err := strconv.ParseBool(ativoStr); err == nil </span><span class="cov0" title="0">{
+                        req.Ativo = &amp;ativo
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.ListLotacoes(req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// Cargo Handlers
+
+// CreateCargo handles POST /cargos
+func (h *Handler) CreateCargo(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateCargoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.CreateCargo(&amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetCargo handles GET /cargos/{id}
+func (h *Handler) GetCargo(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetCargoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrCargoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateCargo handles PUT /cargos/{id}
+func (h *Handler) UpdateCargo(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateCargoRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.UpdateCargo(id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrCargoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteCargo handles DELETE /cargos/{id}
+func (h *Handler) DeleteCargo(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.DeleteCargo(id)
+        if err != nil </span><span class="cov0" title="0">{
+                if err == ErrCargoNotFound </span><span class="cov0" title="0">{
+                        http.Error(w, err.Error(), http.StatusNotFound)
+                        return
+                }</span>
+                <span class="cov0" title="0">http.Error(w, err.Error(), http.StatusInternalServerError)
+                return</span>
+        }
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListCargos handles GET /cargos
+func (h *Handler) ListCargos(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if ativoStr := r.URL.Query().Get("ativo"); ativoStr != "" </span><span class="cov0" title="0">{
+                if ativo, err := strconv.ParseBool(ativoStr); err == nil </span><span class="cov0" title="0">{
+                        req.Ativo = &amp;ativo
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.ListCargos(req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// RegisterRoutes registers all empresa routes
+func (h *Handler) RegisterRoutes(router *mux.Router) <span class="cov0" title="0">{
+        // Empresa routes
+        empresaRouter := router.PathPrefix("/empresas").Subrouter()
+        empresaRouter.HandleFunc("", h.CreateEmpresa).Methods("POST")
+        empresaRouter.HandleFunc("", h.ListEmpresas).Methods("GET")
+        empresaRouter.HandleFunc("/{id}", h.GetEmpresa).Methods("GET")
+        empresaRouter.HandleFunc("/{id}", h.UpdateEmpresa).Methods("PUT")
+        empresaRouter.HandleFunc("/{id}", h.DeleteEmpresa).Methods("DELETE")
+
+        // Estabelecimento routes
+        estabelecimentoRouter := router.PathPrefix("/estabelecimentos").Subrouter()
+        estabelecimentoRouter.HandleFunc("", h.CreateEstabelecimento).Methods("POST")
+        estabelecimentoRouter.HandleFunc("", h.ListEstabelecimentos).Methods("GET")
+        estabelecimentoRouter.HandleFunc("/{id}", h.GetEstabelecimento).Methods("GET")
+        estabelecimentoRouter.HandleFunc("/{id}", h.UpdateEstabelecimento).Methods("PUT")
+        estabelecimentoRouter.HandleFunc("/{id}", h.DeleteEstabelecimento).Methods("DELETE")
+
+        // Rubrica routes
+        rubricaRouter := router.PathPrefix("/rubricas").Subrouter()
+        rubricaRouter.HandleFunc("", h.CreateRubrica).Methods("POST")
+        rubricaRouter.HandleFunc("", h.ListRubricas).Methods("GET")
+        rubricaRouter.HandleFunc("/{id}", h.GetRubrica).Methods("GET")
+        rubricaRouter.HandleFunc("/{id}", h.UpdateRubrica).Methods("PUT")
+        rubricaRouter.HandleFunc("/{id}", h.DeleteRubrica).Methods("DELETE")
+
+        // Lotacao routes
+        lotacaoRouter := router.PathPrefix("/lotacoes").Subrouter()
+        lotacaoRouter.HandleFunc("", h.CreateLotacao).Methods("POST")
+        lotacaoRouter.HandleFunc("", h.ListLotacoes).Methods("GET")
+        lotacaoRouter.HandleFunc("/{id}", h.GetLotacao).Methods("GET")
+        lotacaoRouter.HandleFunc("/{id}", h.UpdateLotacao).Methods("PUT")
+        lotacaoRouter.HandleFunc("/{id}", h.DeleteLotacao).Methods("DELETE")
+
+        // Cargo routes
+        cargoRouter := router.PathPrefix("/cargos").Subrouter()
+        cargoRouter.HandleFunc("", h.CreateCargo).Methods("POST")
+        cargoRouter.HandleFunc("", h.ListCargos).Methods("GET")
+        cargoRouter.HandleFunc("/{id}", h.GetCargo).Methods("GET")
+        cargoRouter.HandleFunc("/{id}", h.UpdateCargo).Methods("PUT")
+        cargoRouter.HandleFunc("/{id}", h.DeleteCargo).Methods("DELETE")
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package empresa
+
+import (
+        "errors"
+
+        "github.com/avelinobego/esocial/configs"
+        "github.com/avelinobego/esocial/pkg/utils"
+)
+
+var (
+        ErrEmpresaNotFound         = errors.New("empresa not found")
+        ErrEstabelecimentoNotFound = errors.New("estabelecimento not found")
+        ErrRubricaNotFound         = errors.New("rubrica not found")
+        ErrLotacaoNotFound         = errors.New("lotacao not found")
+        ErrCargoNotFound           = errors.New("cargo not found")
+        ErrEmpresaAlreadyExists    = errors.New("empresa already exists")
+        ErrInvalidCNPJ             = errors.New("invalid CNPJ")
+)
+
+type Repository interface {
+        // Empresa methods
+        CreateEmpresa(*Empresa) error
+        GetEmpresaByID(string) (*Empresa, error)
+        GetEmpresaByCNPJ(string) (*Empresa, error)
+        UpdateEmpresa(string, map[string]interface{}) error
+        DeleteEmpresa(string) error
+        ListEmpresas(map[string]interface{}, int, int) ([]*Empresa, int64, error)
+
+        // Estabelecimento methods
+        CreateEstabelecimento(*Estabelecimento) error
+        GetEstabelecimentoByID(string) (*Estabelecimento, error)
+        UpdateEstabelecimento(string, map[string]interface{}) error
+        DeleteEstabelecimento(string) error
+        ListEstabelecimentos(map[string]interface{}, int, int) ([]*Estabelecimento, int64, error)
+
+        // Rubrica methods
+        CreateRubrica(*Rubrica) error
+        GetRubricaByID(string) (*Rubrica, error)
+        UpdateRubrica(string, map[string]interface{}) error
+        DeleteRubrica(string) error
+        ListRubricas(map[string]interface{}, int, int) ([]*Rubrica, int64, error)
+
+        // Lotacao methods
+        CreateLotacao(*Lotacao) error
+        GetLotacaoByID(string) (*Lotacao, error)
+        UpdateLotacao(string, map[string]interface{}) error
+        DeleteLotacao(string) error
+        ListLotacoes(map[string]interface{}, int, int) ([]*Lotacao, int64, error)
+
+        // Cargo methods
+        CreateCargo(*Cargo) error
+        GetCargoByID(string) (*Cargo, error)
+        UpdateCargo(string, map[string]interface{}) error
+        DeleteCargo(string) error
+        ListCargos(map[string]interface{}, int, int) ([]*Cargo, int64, error)
+}
+
+type Service struct {
+        repo   Repository
+        logger *configs.Logger
+}
+
+func NewService(repo Repository, logger *configs.Logger) *Service <span class="cov8" title="1">{
+        return &amp;Service{
+                repo:   repo,
+                logger: logger,
+        }
+}</span>
+
+// Empresa Service Methods
+func (s *Service) CreateEmpresa(req *CreateEmpresaRequest) (*EmpresaResponse, error) <span class="cov8" title="1">{
+        // Validate CNPJ format
+        if !s.isValidCNPJ(req.CNPJ) </span><span class="cov8" title="1">{
+                return nil, ErrInvalidCNPJ
+        }</span>
+
+        // Check if empresa already exists
+        <span class="cov8" title="1">existing, err := s.repo.GetEmpresaByCNPJ(req.CNPJ)
+        if err == nil &amp;&amp; existing != nil </span><span class="cov8" title="1">{
+                return nil, ErrEmpresaAlreadyExists
+        }</span>
+
+        // Create empresa entity
+        <span class="cov8" title="1">e := &amp;Empresa{
+                CNPJ:                    req.CNPJ,
+                RazaoSocial:             req.RazaoSocial,
+                NomeFantasia:            req.NomeFantasia,
+                TipoInscricao:           req.TipoInscricao,
+                ClassificacaoTributaria: req.ClassificacaoTributaria,
+                NaturezaJuridica:        req.NaturezaJuridica,
+                IndCooperativa:          req.IndCooperativa,
+                IndConstrutora:          req.IndConstrutora,
+                IndDesoneracao:          req.IndDesoneracao,
+                Situacao:                "ATIVA",
+                UsuarioCadastro:         req.UsuarioCadastro,
+                Telefone:                req.Telefone,
+                Email:                   req.Email,
+                Logradouro:              req.Logradouro,
+                Numero:                  req.Numero,
+                Complemento:             req.Complemento,
+                Bairro:                  req.Bairro,
+                Cidade:                  req.Cidade,
+                UF:                      req.UF,
+                CEP:                     req.CEP,
+        }
+
+        err = s.repo.CreateEmpresa(e)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to create empresa", "error", err, "cnpj", req.CNPJ)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Empresa created successfully", "id", e.ID, "cnpj", req.CNPJ)
+        return s.mapEmpresaToResponse(e), nil</span>
+}
+
+func (s *Service) GetEmpresaByID(id string) (*EmpresaResponse, error) <span class="cov8" title="1">{
+        e, err := s.repo.GetEmpresaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to get empresa", "error", err, "id", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if e == nil </span><span class="cov8" title="1">{
+                return nil, ErrEmpresaNotFound
+        }</span>
+        <span class="cov8" title="1">return s.mapEmpresaToResponse(e), nil</span>
+}
+
+func (s *Service) UpdateEmpresa(id string, req *UpdateEmpresaRequest) (*EmpresaResponse, error) <span class="cov8" title="1">{
+        // Check if empresa exists
+        existing, err := s.repo.GetEmpresaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return nil, ErrEmpresaNotFound
+        }</span>
+
+        // Build updates map
+        <span class="cov8" title="1">updates := utils.MapFromArgs(
+                "razao_social", req.RazaoSocial,
+                "nome_fantasia", req.NomeFantasia,
+                "tipo_inscricao", req.TipoInscricao,
+                "classificacao_tributaria", req.ClassificacaoTributaria,
+                "natureza_juridica", req.NaturezaJuridica,
+                "ind_cooperativa", req.IndCooperativa,
+                "ind_construtora", req.IndConstrutora,
+                "ind_desoneracao", req.IndDesoneracao,
+                "situacao", req.Situacao,
+                "telefone", req.Telefone,
+                "email", req.Email,
+                "logradouro", req.Logradouro,
+                "numero", req.Numero,
+                "complemento", req.Complemento,
+                "bairro", req.Bairro,
+                "cidade", req.Cidade,
+                "uf", req.UF,
+                "cep", req.CEP,
+                "protocolo_esocial", req.ProtocoloESocial,
+                "recibo_esocial", req.ReciboESocial,
+                "data_envio_esocial", req.DataEnvioESocial,
+                "status_esocial", req.StatusESocial,
+        )
+
+        err = s.repo.UpdateEmpresa(id, updates)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to update empresa", "error", err, "id", id)
+                return nil, err
+        }</span>
+
+        // Get updated empresa
+        <span class="cov8" title="1">updated, err := s.repo.GetEmpresaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Empresa updated successfully", "id", id)
+        return s.mapEmpresaToResponse(updated), nil</span>
+}
+
+func (s *Service) DeleteEmpresa(id string) error <span class="cov8" title="1">{
+        // Check if empresa exists
+        existing, err := s.repo.GetEmpresaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return ErrEmpresaNotFound
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.DeleteEmpresa(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to delete empresa", "error", err, "id", id)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Empresa deleted successfully", "id", id)
+        return nil</span>
+}
+
+func (s *Service) ListEmpresas(req *ListRequest) (*ListResponse[EmpresaResponse], error) <span class="cov8" title="1">{
+        page := 1
+        limit := 10
+        if req.Page &gt; 0 </span><span class="cov8" title="1">{
+                page = req.Page
+        }</span>
+        <span class="cov8" title="1">if req.Limit &gt; 0 &amp;&amp; req.Limit &lt;= 100 </span><span class="cov8" title="1">{
+                limit = req.Limit
+        }</span>
+        <span class="cov8" title="1">offset := (page - 1) * limit
+
+        filter := utils.MapFromArgs(
+                "empresa_id", req.EmpresaID,
+                "search", req.Search,
+                "situacao", req.Ativo, // reusing Ativo for situacao
+        )
+
+        empresas, total, err := s.repo.ListEmpresas(filter, limit, offset)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to list empresas", "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">responses := make([]EmpresaResponse, len(empresas))
+        for i, e := range empresas </span><span class="cov8" title="1">{
+                responses[i] = *s.mapEmpresaToResponse(e)
+        }</span>
+
+        <span class="cov8" title="1">totalPages := (int(total) + limit - 1) / limit
+
+        return &amp;ListResponse[EmpresaResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       page,
+                Limit:      limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// Estabelecimento Service Methods
+func (s *Service) CreateEstabelecimento(req *CreateEstabelecimentoRequest) (*EstabelecimentoResponse, error) <span class="cov8" title="1">{
+        // Check if empresa exists
+        _, err := s.repo.GetEmpresaByID(req.EmpresaID)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">e := &amp;Estabelecimento{
+                EmpresaID:            req.EmpresaID,
+                TipoInscricao:        req.TipoInscricao,
+                NumeroInscricao:      req.NumeroInscricao,
+                CNAEPrincipal:        req.CNAEPrincipal,
+                CNAEPreparatorio:     req.CNAEPreparatorio,
+                AlvaraFuncionamento:  req.AlvaraFuncionamento,
+                DataInicioAtividades: req.DataInicioAtividades,
+                IndObra:              req.IndObra,
+                Logradouro:           req.Logradouro,
+                Numero:               req.Numero,
+                Complemento:          req.Complemento,
+                Bairro:               req.Bairro,
+                Cidade:               req.Cidade,
+                UF:                   req.UF,
+                CEP:                  req.CEP,
+                Situacao:             "ATIVO",
+        }
+
+        err = s.repo.CreateEstabelecimento(e)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to create estabelecimento", "error", err, "empresa_id", req.EmpresaID)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Estabelecimento created successfully", "id", e.ID)
+        return s.mapEstabelecimentoToResponse(e), nil</span>
+}
+
+func (s *Service) GetEstabelecimentoByID(id string) (*EstabelecimentoResponse, error) <span class="cov8" title="1">{
+        e, err := s.repo.GetEstabelecimentoByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to get estabelecimento", "error", err, "id", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if e == nil </span><span class="cov8" title="1">{
+                return nil, ErrEstabelecimentoNotFound
+        }</span>
+        <span class="cov8" title="1">return s.mapEstabelecimentoToResponse(e), nil</span>
+}
+
+func (s *Service) UpdateEstabelecimento(id string, req *UpdateEstabelecimentoRequest) (*EstabelecimentoResponse, error) <span class="cov8" title="1">{
+        existing, err := s.repo.GetEstabelecimentoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return nil, ErrEstabelecimentoNotFound
+        }</span>
+
+        <span class="cov8" title="1">updates := utils.MapFromArgs(
+                "tipo_inscricao", req.TipoInscricao,
+                "numero_inscricao", req.NumeroInscricao,
+                "cnae_principal", req.CNAEPrincipal,
+                "cnae_preparatorio", req.CNAEPreparatorio,
+                "alvara_funcionamento", req.AlvaraFuncionamento,
+                "data_inicio_atividades", req.DataInicioAtividades,
+                "ind_obra", req.IndObra,
+                "logradouro", req.Logradouro,
+                "numero", req.Numero,
+                "complemento", req.Complemento,
+                "bairro", req.Bairro,
+                "cidade", req.Cidade,
+                "uf", req.UF,
+                "cep", req.CEP,
+                "situacao", req.Situacao,
+        )
+
+        err = s.repo.UpdateEstabelecimento(id, updates)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to update estabelecimento", "error", err, "id", id)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">updated, err := s.repo.GetEstabelecimentoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Estabelecimento updated successfully", "id", id)
+        return s.mapEstabelecimentoToResponse(updated), nil</span>
+}
+
+func (s *Service) DeleteEstabelecimento(id string) error <span class="cov8" title="1">{
+        existing, err := s.repo.GetEstabelecimentoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return ErrEstabelecimentoNotFound
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.DeleteEstabelecimento(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to delete estabelecimento", "error", err, "id", id)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Estabelecimento deleted successfully", "id", id)
+        return nil</span>
+}
+
+func (s *Service) ListEstabelecimentos(req *ListRequest) (*ListResponse[EstabelecimentoResponse], error) <span class="cov8" title="1">{
+        page := 1
+        limit := 10
+        if req.Page &gt; 0 </span><span class="cov8" title="1">{
+                page = req.Page
+        }</span>
+        <span class="cov8" title="1">if req.Limit &gt; 0 &amp;&amp; req.Limit &lt;= 100 </span><span class="cov8" title="1">{
+                limit = req.Limit
+        }</span>
+        <span class="cov8" title="1">offset := (page - 1) * limit
+
+        filter := utils.MapFromArgs(
+                "empresa_id", req.EmpresaID,
+                "search", req.Search,
+                "situacao", req.Ativo,
+        )
+
+        estabelecimentos, total, err := s.repo.ListEstabelecimentos(filter, limit, offset)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to list estabelecimentos", "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">responses := make([]EstabelecimentoResponse, len(estabelecimentos))
+        for i, e := range estabelecimentos </span><span class="cov8" title="1">{
+                responses[i] = *s.mapEstabelecimentoToResponse(e)
+        }</span>
+
+        <span class="cov8" title="1">totalPages := (int(total) + limit - 1) / limit
+
+        return &amp;ListResponse[EstabelecimentoResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       page,
+                Limit:      limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// Rubrica Service Methods
+func (s *Service) CreateRubrica(req *CreateRubricaRequest) (*RubricaResponse, error) <span class="cov8" title="1">{
+        _, err := s.repo.GetEmpresaByID(req.EmpresaID)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">rb := &amp;Rubrica{
+                EmpresaID:          req.EmpresaID,
+                Codigo:             req.Codigo,
+                Descricao:          req.Descricao,
+                NaturezaRubrica:    req.NaturezaRubrica,
+                TipoRubrica:        req.TipoRubrica,
+                CodINCCP:           req.CodINCCP,
+                CodINCIRRF:         req.CodINCIRRF,
+                CodINCFGTS:         req.CodINCFGTS,
+                CodINCSind:         req.CodINCSind,
+                Ativa:              true,
+                DataInicioValidade: req.DataInicioValidade,
+                DataFimValidade:    req.DataFimValidade,
+        }
+
+        err = s.repo.CreateRubrica(rb)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to create rubrica", "error", err, "empresa_id", req.EmpresaID)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Rubrica created successfully", "id", rb.ID)
+        return s.mapRubricaToResponse(rb), nil</span>
+}
+
+func (s *Service) GetRubricaByID(id string) (*RubricaResponse, error) <span class="cov8" title="1">{
+        rb, err := s.repo.GetRubricaByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to get rubrica", "error", err, "id", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if rb == nil </span><span class="cov8" title="1">{
+                return nil, ErrRubricaNotFound
+        }</span>
+        <span class="cov8" title="1">return s.mapRubricaToResponse(rb), nil</span>
+}
+
+func (s *Service) UpdateRubrica(id string, req *UpdateRubricaRequest) (*RubricaResponse, error) <span class="cov8" title="1">{
+        existing, err := s.repo.GetRubricaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return nil, ErrRubricaNotFound
+        }</span>
+
+        <span class="cov8" title="1">updates := utils.MapFromArgs(
+                "codigo", req.Codigo,
+                "descricao", req.Descricao,
+                "natureza_rubrica", req.NaturezaRubrica,
+                "tipo_rubrica", req.TipoRubrica,
+                "cod_inccp", req.CodINCCP,
+                "cod_incirrf", req.CodINCIRRF,
+                "cod_incfgts", req.CodINCFGTS,
+                "cod_incsind", req.CodINCSind,
+                "ativa", req.Ativa,
+                "data_inicio_validade", req.DataInicioValidade,
+                "data_fim_validade", req.DataFimValidade,
+        )
+
+        err = s.repo.UpdateRubrica(id, updates)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to update rubrica", "error", err, "id", id)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">updated, err := s.repo.GetRubricaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Rubrica updated successfully", "id", id)
+        return s.mapRubricaToResponse(updated), nil</span>
+}
+
+func (s *Service) DeleteRubrica(id string) error <span class="cov8" title="1">{
+        existing, err := s.repo.GetRubricaByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return ErrRubricaNotFound
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.DeleteRubrica(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to delete rubrica", "error", err, "id", id)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Rubrica deleted successfully", "id", id)
+        return nil</span>
+}
+
+func (s *Service) ListRubricas(req *ListRequest) (*ListResponse[RubricaResponse], error) <span class="cov8" title="1">{
+        page := 1
+        limit := 10
+        if req.Page &gt; 0 </span><span class="cov8" title="1">{
+                page = req.Page
+        }</span>
+        <span class="cov8" title="1">if req.Limit &gt; 0 &amp;&amp; req.Limit &lt;= 100 </span><span class="cov8" title="1">{
+                limit = req.Limit
+        }</span>
+        <span class="cov8" title="1">offset := (page - 1) * limit
+
+        filter := utils.MapFromArgs(
+                "empresa_id", req.EmpresaID,
+                "search", req.Search,
+                "ativa", req.Ativo,
+        )
+
+        rubricas, total, err := s.repo.ListRubricas(filter, limit, offset)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to list rubricas", "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">responses := make([]RubricaResponse, len(rubricas))
+        for i, rb := range rubricas </span><span class="cov8" title="1">{
+                responses[i] = *s.mapRubricaToResponse(rb)
+        }</span>
+
+        <span class="cov8" title="1">totalPages := (int(total) + limit - 1) / limit
+
+        return &amp;ListResponse[RubricaResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       page,
+                Limit:      limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// Lotacao Service Methods
+func (s *Service) CreateLotacao(req *CreateLotacaoRequest) (*LotacaoResponse, error) <span class="cov8" title="1">{
+        _, err := s.repo.GetEmpresaByID(req.EmpresaID)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">l := &amp;Lotacao{
+                EmpresaID:          req.EmpresaID,
+                Codigo:             req.Codigo,
+                Descricao:          req.Descricao,
+                TipoLotacao:        req.TipoLotacao,
+                FPAS:               req.FPAS,
+                CodTerceiros:       req.CodTerceiros,
+                Ativa:              true,
+                DataInicioValidade: req.DataInicioValidade,
+                DataFimValidade:    req.DataFimValidade,
+        }
+
+        err = s.repo.CreateLotacao(l)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to create lotacao", "error", err, "empresa_id", req.EmpresaID)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Lotacao created successfully", "id", l.ID)
+        return s.mapLotacaoToResponse(l), nil</span>
+}
+
+func (s *Service) GetLotacaoByID(id string) (*LotacaoResponse, error) <span class="cov8" title="1">{
+        l, err := s.repo.GetLotacaoByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to get lotacao", "error", err, "id", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if l == nil </span><span class="cov8" title="1">{
+                return nil, ErrLotacaoNotFound
+        }</span>
+        <span class="cov8" title="1">return s.mapLotacaoToResponse(l), nil</span>
+}
+
+func (s *Service) UpdateLotacao(id string, req *UpdateLotacaoRequest) (*LotacaoResponse, error) <span class="cov8" title="1">{
+        existing, err := s.repo.GetLotacaoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return nil, ErrLotacaoNotFound
+        }</span>
+
+        <span class="cov8" title="1">updates := utils.MapFromArgs(
+                "codigo", req.Codigo,
+                "descricao", req.Descricao,
+                "tipo_lotacao", req.TipoLotacao,
+                "fpas", req.FPAS,
+                "cod_terceiros", req.CodTerceiros,
+                "ativa", req.Ativa,
+                "data_inicio_validade", req.DataInicioValidade,
+                "data_fim_validade", req.DataFimValidade,
+        )
+
+        err = s.repo.UpdateLotacao(id, updates)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to update lotacao", "error", err, "id", id)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">updated, err := s.repo.GetLotacaoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Lotacao updated successfully", "id", id)
+        return s.mapLotacaoToResponse(updated), nil</span>
+}
+
+func (s *Service) DeleteLotacao(id string) error <span class="cov8" title="1">{
+        existing, err := s.repo.GetLotacaoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return ErrLotacaoNotFound
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.DeleteLotacao(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to delete lotacao", "error", err, "id", id)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Lotacao deleted successfully", "id", id)
+        return nil</span>
+}
+
+func (s *Service) ListLotacoes(req *ListRequest) (*ListResponse[LotacaoResponse], error) <span class="cov8" title="1">{
+        page := 1
+        limit := 10
+        if req.Page &gt; 0 </span><span class="cov8" title="1">{
+                page = req.Page
+        }</span>
+        <span class="cov8" title="1">if req.Limit &gt; 0 &amp;&amp; req.Limit &lt;= 100 </span><span class="cov8" title="1">{
+                limit = req.Limit
+        }</span>
+        <span class="cov8" title="1">offset := (page - 1) * limit
+
+        filter := utils.MapFromArgs(
+                "empresa_id", req.EmpresaID,
+                "search", req.Search,
+                "ativa", req.Ativo,
+        )
+
+        lotacoes, total, err := s.repo.ListLotacoes(filter, limit, offset)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to list lotacoes", "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">responses := make([]LotacaoResponse, len(lotacoes))
+        for i, l := range lotacoes </span><span class="cov8" title="1">{
+                responses[i] = *s.mapLotacaoToResponse(l)
+        }</span>
+
+        <span class="cov8" title="1">totalPages := (int(total) + limit - 1) / limit
+
+        return &amp;ListResponse[LotacaoResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       page,
+                Limit:      limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// Cargo Service Methods
+func (s *Service) CreateCargo(req *CreateCargoRequest) (*CargoResponse, error) <span class="cov8" title="1">{
+        _, err := s.repo.GetEmpresaByID(req.EmpresaID)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">c := &amp;Cargo{
+                EmpresaID:          req.EmpresaID,
+                Codigo:             req.Codigo,
+                Descricao:          req.Descricao,
+                CBO:                req.CBO,
+                Ativo:              true,
+                DataInicioValidade: req.DataInicioValidade,
+                DataFimValidade:    req.DataFimValidade,
+        }
+
+        err = s.repo.CreateCargo(c)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to create cargo", "error", err, "empresa_id", req.EmpresaID)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Cargo created successfully", "id", c.ID)
+        return s.mapCargoToResponse(c), nil</span>
+}
+
+func (s *Service) GetCargoByID(id string) (*CargoResponse, error) <span class="cov8" title="1">{
+        c, err := s.repo.GetCargoByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to get cargo", "error", err, "id", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if c == nil </span><span class="cov8" title="1">{
+                return nil, ErrCargoNotFound
+        }</span>
+        <span class="cov8" title="1">return s.mapCargoToResponse(c), nil</span>
+}
+
+func (s *Service) UpdateCargo(id string, req *UpdateCargoRequest) (*CargoResponse, error) <span class="cov8" title="1">{
+        existing, err := s.repo.GetCargoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return nil, ErrCargoNotFound
+        }</span>
+
+        <span class="cov8" title="1">updates := utils.MapFromArgs(
+                "codigo", req.Codigo,
+                "descricao", req.Descricao,
+                "cbo", req.CBO,
+                "ativo", req.Ativo,
+                "data_inicio_validade", req.DataInicioValidade,
+                "data_fim_validade", req.DataFimValidade,
+        )
+
+        err = s.repo.UpdateCargo(id, updates)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to update cargo", "error", err, "id", id)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">updated, err := s.repo.GetCargoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Cargo updated successfully", "id", id)
+        return s.mapCargoToResponse(updated), nil</span>
+}
+
+func (s *Service) DeleteCargo(id string) error <span class="cov8" title="1">{
+        existing, err := s.repo.GetCargoByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if existing == nil </span><span class="cov8" title="1">{
+                return ErrCargoNotFound
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.DeleteCargo(id)
+        if err != nil </span><span class="cov0" title="0">{
+                s.logger.Error("Failed to delete cargo", "error", err, "id", id)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">s.logger.Info("Cargo deleted successfully", "id", id)
+        return nil</span>
+}
+
+func (s *Service) ListCargos(req *ListRequest) (*ListResponse[CargoResponse], error) <span class="cov8" title="1">{
+        page := 1
+        limit := 10
+        if req.Page &gt; 0 </span><span class="cov8" title="1">{
+                page = req.Page
+        }</span>
+        <span class="cov8" title="1">if req.Limit &gt; 0 &amp;&amp; req.Limit &lt;= 100 </span><span class="cov8" title="1">{
+                limit = req.Limit
+        }</span>
+        <span class="cov8" title="1">offset := (page - 1) * limit
+
+        filter := utils.MapFromArgs(
+                "empresa_id", req.EmpresaID,
+                "search", req.Search,
+                "ativo", req.Ativo,
+        )
+
+        cargos, total, err := s.repo.ListCargos(filter, limit, offset)
+        if err != nil </span><span class="cov8" title="1">{
+                s.logger.Error("Failed to list cargos", "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">responses := make([]CargoResponse, len(cargos))
+        for i, c := range cargos </span><span class="cov8" title="1">{
+                responses[i] = *s.mapCargoToResponse(c)
+        }</span>
+
+        <span class="cov8" title="1">totalPages := (int(total) + limit - 1) / limit
+
+        return &amp;ListResponse[CargoResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       page,
+                Limit:      limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// Helper methods
+func (s *Service) isValidCNPJ(cnpj string) bool <span class="cov8" title="1">{
+        // Basic CNPJ validation - should be 14 digits
+        if len(cnpj) != 14 </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">for _, char := range cnpj </span><span class="cov8" title="1">{
+                if char &lt; '0' || char &gt; '9' </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func (s *Service) mapEmpresaToResponse(e *Empresa) *EmpresaResponse <span class="cov8" title="1">{
+        return &amp;EmpresaResponse{
+                ID:                      e.ID,
+                CNPJ:                    e.CNPJ,
+                RazaoSocial:             e.RazaoSocial,
+                NomeFantasia:            e.NomeFantasia,
+                TipoInscricao:           e.TipoInscricao,
+                ClassificacaoTributaria: e.ClassificacaoTributaria,
+                NaturezaJuridica:        e.NaturezaJuridica,
+                IndCooperativa:          e.IndCooperativa,
+                IndConstrutora:          e.IndConstrutora,
+                IndDesoneracao:          e.IndDesoneracao,
+                Situacao:                e.Situacao,
+                DataCadastro:            e.DataCadastro,
+                DataAtualizacao:         e.DataAtualizacao,
+                UsuarioCadastro:         e.UsuarioCadastro,
+                Telefone:                e.Telefone,
+                Email:                   e.Email,
+                Logradouro:              e.Logradouro,
+                Numero:                  e.Numero,
+                Complemento:             e.Complemento,
+                Bairro:                  e.Bairro,
+                Cidade:                  e.Cidade,
+                UF:                      e.UF,
+                CEP:                     e.CEP,
+                ProtocoloESocial:        e.ProtocoloESocial,
+                ReciboESocial:           e.ReciboESocial,
+                DataEnvioESocial:        e.DataEnvioESocial,
+                StatusESocial:           e.StatusESocial,
+        }
+}</span>
+
+func (s *Service) mapEstabelecimentoToResponse(e *Estabelecimento) *EstabelecimentoResponse <span class="cov8" title="1">{
+        return &amp;EstabelecimentoResponse{
+                ID:                   e.ID,
+                EmpresaID:            e.EmpresaID,
+                TipoInscricao:        e.TipoInscricao,
+                NumeroInscricao:      e.NumeroInscricao,
+                CNAEPrincipal:        e.CNAEPrincipal,
+                CNAEPreparatorio:     e.CNAEPreparatorio,
+                AlvaraFuncionamento:  e.AlvaraFuncionamento,
+                DataInicioAtividades: e.DataInicioAtividades,
+                IndObra:              e.IndObra,
+                Logradouro:           e.Logradouro,
+                Numero:               e.Numero,
+                Complemento:          e.Complemento,
+                Bairro:               e.Bairro,
+                Cidade:               e.Cidade,
+                UF:                   e.UF,
+                CEP:                  e.CEP,
+                Situacao:             e.Situacao,
+                DataCadastro:         e.DataCadastro,
+        }
+}</span>
+
+func (s *Service) mapRubricaToResponse(rb *Rubrica) *RubricaResponse <span class="cov8" title="1">{
+        return &amp;RubricaResponse{
+                ID:                 rb.ID,
+                EmpresaID:          rb.EmpresaID,
+                Codigo:             rb.Codigo,
+                Descricao:          rb.Descricao,
+                NaturezaRubrica:    rb.NaturezaRubrica,
+                TipoRubrica:        rb.TipoRubrica,
+                CodINCCP:           rb.CodINCCP,
+                CodINCIRRF:         rb.CodINCIRRF,
+                CodINCFGTS:         rb.CodINCFGTS,
+                CodINCSind:         rb.CodINCSind,
+                Ativa:              rb.Ativa,
+                DataCadastro:       rb.DataCadastro,
+                DataInicioValidade: rb.DataInicioValidade,
+                DataFimValidade:    rb.DataFimValidade,
+        }
+}</span>
+
+func (s *Service) mapLotacaoToResponse(l *Lotacao) *LotacaoResponse <span class="cov8" title="1">{
+        return &amp;LotacaoResponse{
+                ID:                 l.ID,
+                EmpresaID:          l.EmpresaID,
+                Codigo:             l.Codigo,
+                Descricao:          l.Descricao,
+                TipoLotacao:        l.TipoLotacao,
+                FPAS:               l.FPAS,
+                CodTerceiros:       l.CodTerceiros,
+                Ativa:              l.Ativa,
+                DataCadastro:       l.DataCadastro,
+                DataInicioValidade: l.DataInicioValidade,
+                DataFimValidade:    l.DataFimValidade,
+        }
+}</span>
+
+func (s *Service) mapCargoToResponse(c *Cargo) *CargoResponse <span class="cov8" title="1">{
+        return &amp;CargoResponse{
+                ID:                 c.ID,
+                EmpresaID:          c.EmpresaID,
+                Codigo:             c.Codigo,
+                Descricao:          c.Descricao,
+                CBO:                c.CBO,
+                Ativo:              c.Ativo,
+                DataCadastro:       c.DataCadastro,
+                DataInicioValidade: c.DataInicioValidade,
+                DataFimValidade:    c.DataFimValidade,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package trabalhador
+
+import (
+        "encoding/json"
+        "net/http"
+        "strconv"
+
+        "github.com/gorilla/mux"
+)
+
+// Handler defines the HTTP handlers for trabalhador operations
+type Handler struct {
+        service Service
+}
+
+// NewHandler creates a new trabalhador handler
+func NewHandler(service Service) *Handler <span class="cov0" title="0">{
+        return &amp;Handler{service: service}
+}</span>
+
+// CreateTrabalhador handles POST /trabalhadores
+func (h *Handler) CreateTrabalhador(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        var req CreateTrabalhadorRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.Create(r.Context(), &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusCreated)
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetTrabalhador handles GET /trabalhadores/{id}
+func (h *Handler) GetTrabalhador(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        response, err := h.service.GetByID(r.Context(), id)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusNotFound)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// GetTrabalhadorByCPF handles GET /trabalhadores/cpf/{cpf}
+func (h *Handler) GetTrabalhadorByCPF(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        cpf := vars["cpf"]
+
+        response, err := h.service.GetByCPF(r.Context(), cpf)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusNotFound)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// UpdateTrabalhador handles PUT /trabalhadores/{id}
+func (h *Handler) UpdateTrabalhador(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        var req UpdateTrabalhadorRequest
+        if err := json.NewDecoder(r.Body).Decode(&amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "Invalid request body", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response, err := h.service.Update(r.Context(), id, &amp;req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// DeleteTrabalhador handles DELETE /trabalhadores/{id}
+func (h *Handler) DeleteTrabalhador(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id := vars["id"]
+
+        err := h.service.Delete(r.Context(), id)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusNotFound)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusNoContent)</span>
+}
+
+// ListTrabalhadores handles GET /trabalhadores
+func (h *Handler) ListTrabalhadores(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        // Parse query parameters
+        req := &amp;ListRequest{}
+
+        if pageStr := r.URL.Query().Get("page"); pageStr != "" </span><span class="cov0" title="0">{
+                if page, err := strconv.Atoi(pageStr); err == nil </span><span class="cov0" title="0">{
+                        req.Page = page
+                }</span>
+        }
+
+        <span class="cov0" title="0">if limitStr := r.URL.Query().Get("limit"); limitStr != "" </span><span class="cov0" title="0">{
+                if limit, err := strconv.Atoi(limitStr); err == nil </span><span class="cov0" title="0">{
+                        req.Limit = limit
+                }</span>
+        }
+
+        <span class="cov0" title="0">if empresaID := r.URL.Query().Get("empresa_id"); empresaID != "" </span><span class="cov0" title="0">{
+                req.EmpresaID = &amp;empresaID
+        }</span>
+
+        <span class="cov0" title="0">if search := r.URL.Query().Get("search"); search != "" </span><span class="cov0" title="0">{
+                req.Search = &amp;search
+        }</span>
+
+        <span class="cov0" title="0">if situacao := r.URL.Query().Get("situacao"); situacao != "" </span><span class="cov0" title="0">{
+                req.Situacao = &amp;situacao
+        }</span>
+
+        <span class="cov0" title="0">if sexo := r.URL.Query().Get("sexo"); sexo != "" </span><span class="cov0" title="0">{
+                req.Sexo = &amp;sexo
+        }</span>
+
+        <span class="cov0" title="0">if possuiDeficienciaStr := r.URL.Query().Get("possui_deficiencia"); possuiDeficienciaStr != "" </span><span class="cov0" title="0">{
+                if possuiDeficiencia, err := strconv.ParseBool(possuiDeficienciaStr); err == nil </span><span class="cov0" title="0">{
+                        req.PossuiDeficiencia = &amp;possuiDeficiencia
+                }</span>
+        }
+
+        <span class="cov0" title="0">response, err := h.service.List(r.Context(), req)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(response)</span>
+}
+
+// RegisterRoutes registers the trabalhador routes
+func (h *Handler) RegisterRoutes(router *mux.Router) <span class="cov0" title="0">{
+        trabalhadorRouter := router.PathPrefix("/trabalhadores").Subrouter()
+
+        trabalhadorRouter.HandleFunc("", h.CreateTrabalhador).Methods("POST")
+        trabalhadorRouter.HandleFunc("", h.ListTrabalhadores).Methods("GET")
+        trabalhadorRouter.HandleFunc("/{id}", h.GetTrabalhador).Methods("GET")
+        trabalhadorRouter.HandleFunc("/{id}", h.UpdateTrabalhador).Methods("PUT")
+        trabalhadorRouter.HandleFunc("/{id}", h.DeleteTrabalhador).Methods("DELETE")
+        trabalhadorRouter.HandleFunc("/cpf/{cpf}", h.GetTrabalhadorByCPF).Methods("GET")
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package trabalhador
+
+import (
+        "context"
+        "database/sql"
+        "fmt"
+        "strings"
+
+        "github.com/lib/pq"
+)
+
+// Repository defines the interface for trabalhador data operations
+type Repository interface {
+        Create(ctx context.Context, trabalhador *Trabalhador) error
+        GetByID(ctx context.Context, id string) (*Trabalhador, error)
+        GetByCPF(ctx context.Context, cpf string) (*Trabalhador, error)
+        Update(ctx context.Context, trabalhador *Trabalhador) error
+        Delete(ctx context.Context, id string) error
+        List(ctx context.Context, req *ListRequest) ([]*Trabalhador, int64, error)
+}
+
+// PostgresRepository implements Repository interface for PostgreSQL
+type PostgresRepository struct {
+        db *sql.DB
+}
+
+// NewPostgresRepository creates a new PostgreSQL repository
+func NewPostgresRepository(db *sql.DB) Repository <span class="cov0" title="0">{
+        return &amp;PostgresRepository{db: db}
+}</span>
+
+// Create inserts a new trabalhador record
+func (r *PostgresRepository) Create(ctx context.Context, trabalhador *Trabalhador) error <span class="cov0" title="0">{
+        query := `
+                INSERT INTO trabalhador (
+                        id, empresa_id, cpf, nis, nome, nome_social, data_nascimento, sexo,
+                        raca_cor, estado_civil, grau_instrucao, pais_nascimento, pais_nacionalidade,
+                        numero_ctps, serie_ctps, uf_ctps, data_emissao_ctps, numero_rg, orgao_emissor_rg,
+                        uf_rg, data_emissao_rg, numero_cnh, categoria_cnh, validade_cnh, numero_rne,
+                        telefone, celular, email, cep, logradouro, numero, complemento, bairro,
+                        cidade, uf, banco, agencia, conta, tipo_conta, possui_deficiencia,
+                        tipo_deficiencia, observacao_deficiencia, situacao, data_cadastro,
+                        data_atualizacao, foto_url
+                ) VALUES (
+                        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17,
+                        $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32,
+                        $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47
+                )`
+
+        _, err := r.db.ExecContext(ctx, query,
+                trabalhador.ID, trabalhador.EmpresaID, trabalhador.CPF, trabalhador.NIS,
+                trabalhador.Nome, trabalhador.NomeSocial, trabalhador.DataNascimento,
+                trabalhador.Sexo, trabalhador.RacaCor, trabalhador.EstadoCivil,
+                trabalhador.GrauInstrucao, trabalhador.PaisNascimento, trabalhador.PaisNacionalidade,
+                trabalhador.NumeroCTPS, trabalhador.SerieCTPS, trabalhador.UFCTPS,
+                trabalhador.DataEmissaoCTPS, trabalhador.NumeroRG, trabalhador.OrgaoEmissorRG,
+                trabalhador.UFRG, trabalhador.DataEmissaoRG, trabalhador.NumeroCNH,
+                trabalhador.CategoriaCNH, trabalhador.ValidadeCNH, trabalhador.NumeroRNE,
+                trabalhador.Telefone, trabalhador.Celular, trabalhador.Email, trabalhador.CEP,
+                trabalhador.Logradouro, trabalhador.Numero, trabalhador.Complemento,
+                trabalhador.Bairro, trabalhador.Cidade, trabalhador.UF, trabalhador.Banco,
+                trabalhador.Agencia, trabalhador.Conta, trabalhador.TipoConta,
+                trabalhador.PossuiDeficiencia, trabalhador.TipoDeficiencia,
+                trabalhador.ObservacaoDeficiencia, trabalhador.Situacao,
+                trabalhador.DataCadastro, trabalhador.DataAtualizacao, trabalhador.FotoURL,
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                if pqErr, ok := err.(*pq.Error); ok </span><span class="cov0" title="0">{
+                        switch pqErr.Code </span>{
+                        case "23505":<span class="cov0" title="0"> // unique_violation
+                                return fmt.Errorf("trabalhador with CPF %s already exists", trabalhador.CPF)</span>
+                        case "23503":<span class="cov0" title="0"> // foreign_key_violation
+                                return fmt.Errorf("empresa with ID %s does not exist", trabalhador.EmpresaID)</span>
+                        }
+                }
+                <span class="cov0" title="0">return fmt.Errorf("failed to create trabalhador: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// GetByID retrieves a trabalhador by ID
+func (r *PostgresRepository) GetByID(ctx context.Context, id string) (*Trabalhador, error) <span class="cov0" title="0">{
+        query := `
+                SELECT id, empresa_id, cpf, nis, nome, nome_social, data_nascimento, sexo,
+                           raca_cor, estado_civil, grau_instrucao, pais_nascimento, pais_nacionalidade,
+                           numero_ctps, serie_ctps, uf_ctps, data_emissao_ctps, numero_rg, orgao_emissor_rg,
+                           uf_rg, data_emissao_rg, numero_cnh, categoria_cnh, validade_cnh, numero_rne,
+                           telefone, celular, email, cep, logradouro, numero, complemento, bairro,
+                           cidade, uf, banco, agencia, conta, tipo_conta, possui_deficiencia,
+                           tipo_deficiencia, observacao_deficiencia, situacao, data_cadastro,
+                           data_atualizacao, foto_url
+                FROM trabalhador
+                WHERE id = $1`
+
+        var trabalhador Trabalhador
+        err := r.db.QueryRowContext(ctx, query, id).Scan(
+                &amp;trabalhador.ID, &amp;trabalhador.EmpresaID, &amp;trabalhador.CPF, &amp;trabalhador.NIS,
+                &amp;trabalhador.Nome, &amp;trabalhador.NomeSocial, &amp;trabalhador.DataNascimento,
+                &amp;trabalhador.Sexo, &amp;trabalhador.RacaCor, &amp;trabalhador.EstadoCivil,
+                &amp;trabalhador.GrauInstrucao, &amp;trabalhador.PaisNascimento, &amp;trabalhador.PaisNacionalidade,
+                &amp;trabalhador.NumeroCTPS, &amp;trabalhador.SerieCTPS, &amp;trabalhador.UFCTPS,
+                &amp;trabalhador.DataEmissaoCTPS, &amp;trabalhador.NumeroRG, &amp;trabalhador.OrgaoEmissorRG,
+                &amp;trabalhador.UFRG, &amp;trabalhador.DataEmissaoRG, &amp;trabalhador.NumeroCNH,
+                &amp;trabalhador.CategoriaCNH, &amp;trabalhador.ValidadeCNH, &amp;trabalhador.NumeroRNE,
+                &amp;trabalhador.Telefone, &amp;trabalhador.Celular, &amp;trabalhador.Email, &amp;trabalhador.CEP,
+                &amp;trabalhador.Logradouro, &amp;trabalhador.Numero, &amp;trabalhador.Complemento,
+                &amp;trabalhador.Bairro, &amp;trabalhador.Cidade, &amp;trabalhador.UF, &amp;trabalhador.Banco,
+                &amp;trabalhador.Agencia, &amp;trabalhador.Conta, &amp;trabalhador.TipoConta,
+                &amp;trabalhador.PossuiDeficiencia, &amp;trabalhador.TipoDeficiencia,
+                &amp;trabalhador.ObservacaoDeficiencia, &amp;trabalhador.Situacao,
+                &amp;trabalhador.DataCadastro, &amp;trabalhador.DataAtualizacao, &amp;trabalhador.FotoURL,
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                if err == sql.ErrNoRows </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("trabalhador with ID %s not found", id)
+                }</span>
+                <span class="cov0" title="0">return nil, fmt.Errorf("failed to get trabalhador: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">return &amp;trabalhador, nil</span>
+}
+
+// GetByCPF retrieves a trabalhador by CPF
+func (r *PostgresRepository) GetByCPF(ctx context.Context, cpf string) (*Trabalhador, error) <span class="cov0" title="0">{
+        query := `
+                SELECT id, empresa_id, cpf, nis, nome, nome_social, data_nascimento, sexo,
+                           raca_cor, estado_civil, grau_instrucao, pais_nascimento, pais_nacionalidade,
+                           numero_ctps, serie_ctps, uf_ctps, data_emissao_ctps, numero_rg, orgao_emissor_rg,
+                           uf_rg, data_emissao_rg, numero_cnh, categoria_cnh, validade_cnh, numero_rne,
+                           telefone, celular, email, cep, logradouro, numero, complemento, bairro,
+                           cidade, uf, banco, agencia, conta, tipo_conta, possui_deficiencia,
+                           tipo_deficiencia, observacao_deficiencia, situacao, data_cadastro,
+                           data_atualizacao, foto_url
+                FROM trabalhador
+                WHERE cpf = $1`
+
+        var trabalhador Trabalhador
+        err := r.db.QueryRowContext(ctx, query, cpf).Scan(
+                &amp;trabalhador.ID, &amp;trabalhador.EmpresaID, &amp;trabalhador.CPF, &amp;trabalhador.NIS,
+                &amp;trabalhador.Nome, &amp;trabalhador.NomeSocial, &amp;trabalhador.DataNascimento,
+                &amp;trabalhador.Sexo, &amp;trabalhador.RacaCor, &amp;trabalhador.EstadoCivil,
+                &amp;trabalhador.GrauInstrucao, &amp;trabalhador.PaisNascimento, &amp;trabalhador.PaisNacionalidade,
+                &amp;trabalhador.NumeroCTPS, &amp;trabalhador.SerieCTPS, &amp;trabalhador.UFCTPS,
+                &amp;trabalhador.DataEmissaoCTPS, &amp;trabalhador.NumeroRG, &amp;trabalhador.OrgaoEmissorRG,
+                &amp;trabalhador.UFRG, &amp;trabalhador.DataEmissaoRG, &amp;trabalhador.NumeroCNH,
+                &amp;trabalhador.CategoriaCNH, &amp;trabalhador.ValidadeCNH, &amp;trabalhador.NumeroRNE,
+                &amp;trabalhador.Telefone, &amp;trabalhador.Celular, &amp;trabalhador.Email, &amp;trabalhador.CEP,
+                &amp;trabalhador.Logradouro, &amp;trabalhador.Numero, &amp;trabalhador.Complemento,
+                &amp;trabalhador.Bairro, &amp;trabalhador.Cidade, &amp;trabalhador.UF, &amp;trabalhador.Banco,
+                &amp;trabalhador.Agencia, &amp;trabalhador.Conta, &amp;trabalhador.TipoConta,
+                &amp;trabalhador.PossuiDeficiencia, &amp;trabalhador.TipoDeficiencia,
+                &amp;trabalhador.ObservacaoDeficiencia, &amp;trabalhador.Situacao,
+                &amp;trabalhador.DataCadastro, &amp;trabalhador.DataAtualizacao, &amp;trabalhador.FotoURL,
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                if err == sql.ErrNoRows </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("trabalhador with CPF %s not found", cpf)
+                }</span>
+                <span class="cov0" title="0">return nil, fmt.Errorf("failed to get trabalhador: %w", err)</span>
+        }
+
+        <span class="cov0" title="0">return &amp;trabalhador, nil</span>
+}
+
+// Update modifies an existing trabalhador record
+func (r *PostgresRepository) Update(ctx context.Context, trabalhador *Trabalhador) error <span class="cov0" title="0">{
+        query := `
+                UPDATE trabalhador SET
+                        nis = $2, nome = $3, nome_social = $4, data_nascimento = $5, sexo = $6,
+                        raca_cor = $7, estado_civil = $8, grau_instrucao = $9, pais_nascimento = $10,
+                        pais_nacionalidade = $11, numero_ctps = $12, serie_ctps = $13, uf_ctps = $14,
+                        data_emissao_ctps = $15, numero_rg = $16, orgao_emissor_rg = $17, uf_rg = $18,
+                        data_emissao_rg = $19, numero_cnh = $20, categoria_cnh = $21, validade_cnh = $22,
+                        numero_rne = $23, telefone = $24, celular = $25, email = $26, cep = $27,
+                        logradouro = $28, numero = $29, complemento = $30, bairro = $31, cidade = $32,
+                        uf = $33, banco = $34, agencia = $35, conta = $36, tipo_conta = $37,
+                        possui_deficiencia = $38, tipo_deficiencia = $39, observacao_deficiencia = $40,
+                        situacao = $41, data_atualizacao = $42, foto_url = $43
+                WHERE id = $1`
+
+        result, err := r.db.ExecContext(ctx, query,
+                trabalhador.ID, trabalhador.NIS, trabalhador.Nome, trabalhador.NomeSocial,
+                trabalhador.DataNascimento, trabalhador.Sexo, trabalhador.RacaCor,
+                trabalhador.EstadoCivil, trabalhador.GrauInstrucao, trabalhador.PaisNascimento,
+                trabalhador.PaisNacionalidade, trabalhador.NumeroCTPS, trabalhador.SerieCTPS,
+                trabalhador.UFCTPS, trabalhador.DataEmissaoCTPS, trabalhador.NumeroRG,
+                trabalhador.OrgaoEmissorRG, trabalhador.UFRG, trabalhador.DataEmissaoRG,
+                trabalhador.NumeroCNH, trabalhador.CategoriaCNH, trabalhador.ValidadeCNH,
+                trabalhador.NumeroRNE, trabalhador.Telefone, trabalhador.Celular,
+                trabalhador.Email, trabalhador.CEP, trabalhador.Logradouro, trabalhador.Numero,
+                trabalhador.Complemento, trabalhador.Bairro, trabalhador.Cidade, trabalhador.UF,
+                trabalhador.Banco, trabalhador.Agencia, trabalhador.Conta, trabalhador.TipoConta,
+                trabalhador.PossuiDeficiencia, trabalhador.TipoDeficiencia,
+                trabalhador.ObservacaoDeficiencia, trabalhador.Situacao,
+                trabalhador.DataAtualizacao, trabalhador.FotoURL,
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update trabalhador: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">rowsAffected, err := result.RowsAffected()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to get rows affected: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if rowsAffected == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("trabalhador with ID %s not found", trabalhador.ID)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Delete removes a trabalhador record
+func (r *PostgresRepository) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        query := `DELETE FROM trabalhador WHERE id = $1`
+
+        result, err := r.db.ExecContext(ctx, query, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete trabalhador: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">rowsAffected, err := result.RowsAffected()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to get rows affected: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if rowsAffected == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("trabalhador with ID %s not found", id)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// List retrieves trabalhadores with pagination and filtering
+func (r *PostgresRepository) List(ctx context.Context, req *ListRequest) ([]*Trabalhador, int64, error) <span class="cov0" title="0">{
+        // Build the base query
+        selectQuery := `
+                SELECT id, empresa_id, cpf, nis, nome, nome_social, data_nascimento, sexo,
+                           raca_cor, estado_civil, grau_instrucao, pais_nascimento, pais_nacionalidade,
+                           numero_ctps, serie_ctps, uf_ctps, data_emissao_ctps, numero_rg, orgao_emissor_rg,
+                           uf_rg, data_emissao_rg, numero_cnh, categoria_cnh, validade_cnh, numero_rne,
+                           telefone, celular, email, cep, logradouro, numero, complemento, bairro,
+                           cidade, uf, banco, agencia, conta, tipo_conta, possui_deficiencia,
+                           tipo_deficiencia, observacao_deficiencia, situacao, data_cadastro,
+                           data_atualizacao, foto_url
+                FROM trabalhador`
+
+        countQuery := `SELECT COUNT(*) FROM trabalhador`
+
+        var conditions []string
+        var args []interface{}
+        argIndex := 1
+
+        // Add filters
+        if req.EmpresaID != nil </span><span class="cov0" title="0">{
+                conditions = append(conditions, fmt.Sprintf("empresa_id = $%d", argIndex))
+                args = append(args, *req.EmpresaID)
+                argIndex++
+        }</span>
+
+        <span class="cov0" title="0">if req.Situacao != nil </span><span class="cov0" title="0">{
+                conditions = append(conditions, fmt.Sprintf("situacao = $%d", argIndex))
+                args = append(args, *req.Situacao)
+                argIndex++
+        }</span>
+
+        <span class="cov0" title="0">if req.Sexo != nil </span><span class="cov0" title="0">{
+                conditions = append(conditions, fmt.Sprintf("sexo = $%d", argIndex))
+                args = append(args, *req.Sexo)
+                argIndex++
+        }</span>
+
+        <span class="cov0" title="0">if req.PossuiDeficiencia != nil </span><span class="cov0" title="0">{
+                conditions = append(conditions, fmt.Sprintf("possui_deficiencia = $%d", argIndex))
+                args = append(args, *req.PossuiDeficiencia)
+                argIndex++
+        }</span>
+
+        <span class="cov0" title="0">if req.Search != nil &amp;&amp; *req.Search != "" </span><span class="cov0" title="0">{
+                searchTerm := "%" + *req.Search + "%"
+                conditions = append(conditions, fmt.Sprintf("(nome ILIKE $%d OR cpf ILIKE $%d)", argIndex, argIndex+1))
+                args = append(args, searchTerm, searchTerm)
+                argIndex += 2
+        }</span>
+
+        // Add WHERE clause if there are conditions
+        <span class="cov0" title="0">if len(conditions) &gt; 0 </span><span class="cov0" title="0">{
+                whereClause := " WHERE " + strings.Join(conditions, " AND ")
+                selectQuery += whereClause
+                countQuery += whereClause
+        }</span>
+
+        // Add ordering
+        <span class="cov0" title="0">selectQuery += " ORDER BY nome ASC"
+
+        // Add pagination
+        if req.Page &lt;= 0 </span><span class="cov0" title="0">{
+                req.Page = 1
+        }</span>
+        <span class="cov0" title="0">if req.Limit &lt;= 0 </span><span class="cov0" title="0">{
+                req.Limit = 10
+        }</span>
+        <span class="cov0" title="0">offset := (req.Page - 1) * req.Limit
+        selectQuery += fmt.Sprintf(" LIMIT %d OFFSET %d", req.Limit, offset)
+
+        // Execute count query
+        var total int64
+        err := r.db.QueryRowContext(ctx, countQuery, args...).Scan(&amp;total)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("failed to count trabalhadores: %w", err)
+        }</span>
+
+        // Execute select query
+        <span class="cov0" title="0">rows, err := r.db.QueryContext(ctx, selectQuery, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("failed to list trabalhadores: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer rows.Close()
+
+        var trabalhadores []*Trabalhador
+        for rows.Next() </span><span class="cov0" title="0">{
+                var trabalhador Trabalhador
+                err := rows.Scan(
+                        &amp;trabalhador.ID, &amp;trabalhador.EmpresaID, &amp;trabalhador.CPF, &amp;trabalhador.NIS,
+                        &amp;trabalhador.Nome, &amp;trabalhador.NomeSocial, &amp;trabalhador.DataNascimento,
+                        &amp;trabalhador.Sexo, &amp;trabalhador.RacaCor, &amp;trabalhador.EstadoCivil,
+                        &amp;trabalhador.GrauInstrucao, &amp;trabalhador.PaisNascimento, &amp;trabalhador.PaisNacionalidade,
+                        &amp;trabalhador.NumeroCTPS, &amp;trabalhador.SerieCTPS, &amp;trabalhador.UFCTPS,
+                        &amp;trabalhador.DataEmissaoCTPS, &amp;trabalhador.NumeroRG, &amp;trabalhador.OrgaoEmissorRG,
+                        &amp;trabalhador.UFRG, &amp;trabalhador.DataEmissaoRG, &amp;trabalhador.NumeroCNH,
+                        &amp;trabalhador.CategoriaCNH, &amp;trabalhador.ValidadeCNH, &amp;trabalhador.NumeroRNE,
+                        &amp;trabalhador.Telefone, &amp;trabalhador.Celular, &amp;trabalhador.Email, &amp;trabalhador.CEP,
+                        &amp;trabalhador.Logradouro, &amp;trabalhador.Numero, &amp;trabalhador.Complemento,
+                        &amp;trabalhador.Bairro, &amp;trabalhador.Cidade, &amp;trabalhador.UF, &amp;trabalhador.Banco,
+                        &amp;trabalhador.Agencia, &amp;trabalhador.Conta, &amp;trabalhador.TipoConta,
+                        &amp;trabalhador.PossuiDeficiencia, &amp;trabalhador.TipoDeficiencia,
+                        &amp;trabalhador.ObservacaoDeficiencia, &amp;trabalhador.Situacao,
+                        &amp;trabalhador.DataCadastro, &amp;trabalhador.DataAtualizacao, &amp;trabalhador.FotoURL,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, 0, fmt.Errorf("failed to scan trabalhador: %w", err)
+                }</span>
+                <span class="cov0" title="0">trabalhadores = append(trabalhadores, &amp;trabalhador)</span>
+        }
+
+        <span class="cov0" title="0">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("error iterating trabalhadores: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return trabalhadores, total, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package trabalhador
+
+import (
+        "context"
+        "fmt"
+        "time"
+
+        "github.com/google/uuid"
+)
+
+// Service defines the interface for trabalhador business logic
+type Service interface {
+        Create(ctx context.Context, req *CreateTrabalhadorRequest) (*TrabalhadorResponse, error)
+        GetByID(ctx context.Context, id string) (*TrabalhadorResponse, error)
+        GetByCPF(ctx context.Context, cpf string) (*TrabalhadorResponse, error)
+        Update(ctx context.Context, id string, req *UpdateTrabalhadorRequest) (*TrabalhadorResponse, error)
+        Delete(ctx context.Context, id string) error
+        List(ctx context.Context, req *ListRequest) (*ListResponse[TrabalhadorResponse], error)
+}
+
+// TrabalhadorService implements Service interface
+type TrabalhadorService struct {
+        repo Repository
+}
+
+// NewService creates a new trabalhador service
+func NewService(repo Repository) Service <span class="cov0" title="0">{
+        return &amp;TrabalhadorService{repo: repo}
+}</span>
+
+// Create creates a new trabalhador
+func (s *TrabalhadorService) Create(ctx context.Context, req *CreateTrabalhadorRequest) (*TrabalhadorResponse, error) <span class="cov0" title="0">{
+        // Check if trabalhador with CPF already exists
+        existing, err := s.repo.GetByCPF(ctx, req.CPF)
+        if err == nil &amp;&amp; existing != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("trabalhador with CPF %s already exists", req.CPF)
+        }</span>
+
+        // Create trabalhador entity
+        <span class="cov0" title="0">now := time.Now()
+        trabalhador := &amp;Trabalhador{
+                ID:                    uuid.New().String(),
+                EmpresaID:             req.EmpresaID,
+                CPF:                   req.CPF,
+                NIS:                   req.NIS,
+                Nome:                  req.Nome,
+                NomeSocial:            req.NomeSocial,
+                DataNascimento:        req.DataNascimento,
+                Sexo:                  req.Sexo,
+                RacaCor:               req.RacaCor,
+                EstadoCivil:           req.EstadoCivil,
+                GrauInstrucao:         req.GrauInstrucao,
+                PaisNascimento:        req.PaisNascimento,
+                PaisNacionalidade:     req.PaisNacionalidade,
+                NumeroCTPS:            req.NumeroCTPS,
+                SerieCTPS:             req.SerieCTPS,
+                UFCTPS:                req.UFCTPS,
+                DataEmissaoCTPS:       req.DataEmissaoCTPS,
+                NumeroRG:              req.NumeroRG,
+                OrgaoEmissorRG:        req.OrgaoEmissorRG,
+                UFRG:                  req.UFRG,
+                DataEmissaoRG:         req.DataEmissaoRG,
+                NumeroCNH:             req.NumeroCNH,
+                CategoriaCNH:          req.CategoriaCNH,
+                ValidadeCNH:           req.ValidadeCNH,
+                NumeroRNE:             req.NumeroRNE,
+                Telefone:              req.Telefone,
+                Celular:               req.Celular,
+                Email:                 req.Email,
+                CEP:                   req.CEP,
+                Logradouro:            req.Logradouro,
+                Numero:                req.Numero,
+                Complemento:           req.Complemento,
+                Bairro:                req.Bairro,
+                Cidade:                req.Cidade,
+                UF:                    req.UF,
+                Banco:                 req.Banco,
+                Agencia:               req.Agencia,
+                Conta:                 req.Conta,
+                TipoConta:             req.TipoConta,
+                PossuiDeficiencia:     req.PossuiDeficiencia,
+                TipoDeficiencia:       req.TipoDeficiencia,
+                ObservacaoDeficiencia: req.ObservacaoDeficiencia,
+                Situacao:              "ATIVO",
+                DataCadastro:          now,
+                DataAtualizacao:       now,
+                FotoURL:               req.FotoURL,
+        }
+
+        // Save to repository
+        err = s.repo.Create(ctx, trabalhador)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to create trabalhador: %w", err)
+        }</span>
+
+        // Convert to response
+        <span class="cov0" title="0">response := s.entityToResponse(trabalhador)
+        return response, nil</span>
+}
+
+// GetByID retrieves a trabalhador by ID
+func (s *TrabalhadorService) GetByID(ctx context.Context, id string) (*TrabalhadorResponse, error) <span class="cov0" title="0">{
+        trabalhador, err := s.repo.GetByID(ctx, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">response := s.entityToResponse(trabalhador)
+        return response, nil</span>
+}
+
+// GetByCPF retrieves a trabalhador by CPF
+func (s *TrabalhadorService) GetByCPF(ctx context.Context, cpf string) (*TrabalhadorResponse, error) <span class="cov0" title="0">{
+        trabalhador, err := s.repo.GetByCPF(ctx, cpf)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">response := s.entityToResponse(trabalhador)
+        return response, nil</span>
+}
+
+// Update modifies an existing trabalhador
+func (s *TrabalhadorService) Update(ctx context.Context, id string, req *UpdateTrabalhadorRequest) (*TrabalhadorResponse, error) <span class="cov0" title="0">{
+        // Get existing trabalhador
+        trabalhador, err := s.repo.GetByID(ctx, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Apply updates
+        <span class="cov0" title="0">if req.NIS != nil </span><span class="cov0" title="0">{
+                trabalhador.NIS = req.NIS
+        }</span>
+        <span class="cov0" title="0">if req.Nome != nil </span><span class="cov0" title="0">{
+                trabalhador.Nome = *req.Nome
+        }</span>
+        <span class="cov0" title="0">if req.NomeSocial != nil </span><span class="cov0" title="0">{
+                trabalhador.NomeSocial = req.NomeSocial
+        }</span>
+        <span class="cov0" title="0">if req.DataNascimento != nil </span><span class="cov0" title="0">{
+                trabalhador.DataNascimento = *req.DataNascimento
+        }</span>
+        <span class="cov0" title="0">if req.Sexo != nil </span><span class="cov0" title="0">{
+                trabalhador.Sexo = *req.Sexo
+        }</span>
+        <span class="cov0" title="0">if req.RacaCor != nil </span><span class="cov0" title="0">{
+                trabalhador.RacaCor = req.RacaCor
+        }</span>
+        <span class="cov0" title="0">if req.EstadoCivil != nil </span><span class="cov0" title="0">{
+                trabalhador.EstadoCivil = req.EstadoCivil
+        }</span>
+        <span class="cov0" title="0">if req.GrauInstrucao != nil </span><span class="cov0" title="0">{
+                trabalhador.GrauInstrucao = req.GrauInstrucao
+        }</span>
+        <span class="cov0" title="0">if req.PaisNascimento != nil </span><span class="cov0" title="0">{
+                trabalhador.PaisNascimento = *req.PaisNascimento
+        }</span>
+        <span class="cov0" title="0">if req.PaisNacionalidade != nil </span><span class="cov0" title="0">{
+                trabalhador.PaisNacionalidade = *req.PaisNacionalidade
+        }</span>
+        <span class="cov0" title="0">if req.NumeroCTPS != nil </span><span class="cov0" title="0">{
+                trabalhador.NumeroCTPS = req.NumeroCTPS
+        }</span>
+        <span class="cov0" title="0">if req.SerieCTPS != nil </span><span class="cov0" title="0">{
+                trabalhador.SerieCTPS = req.SerieCTPS
+        }</span>
+        <span class="cov0" title="0">if req.UFCTPS != nil </span><span class="cov0" title="0">{
+                trabalhador.UFCTPS = req.UFCTPS
+        }</span>
+        <span class="cov0" title="0">if req.DataEmissaoCTPS != nil </span><span class="cov0" title="0">{
+                trabalhador.DataEmissaoCTPS = req.DataEmissaoCTPS
+        }</span>
+        <span class="cov0" title="0">if req.NumeroRG != nil </span><span class="cov0" title="0">{
+                trabalhador.NumeroRG = req.NumeroRG
+        }</span>
+        <span class="cov0" title="0">if req.OrgaoEmissorRG != nil </span><span class="cov0" title="0">{
+                trabalhador.OrgaoEmissorRG = req.OrgaoEmissorRG
+        }</span>
+        <span class="cov0" title="0">if req.UFRG != nil </span><span class="cov0" title="0">{
+                trabalhador.UFRG = req.UFRG
+        }</span>
+        <span class="cov0" title="0">if req.DataEmissaoRG != nil </span><span class="cov0" title="0">{
+                trabalhador.DataEmissaoRG = req.DataEmissaoRG
+        }</span>
+        <span class="cov0" title="0">if req.NumeroCNH != nil </span><span class="cov0" title="0">{
+                trabalhador.NumeroCNH = req.NumeroCNH
+        }</span>
+        <span class="cov0" title="0">if req.CategoriaCNH != nil </span><span class="cov0" title="0">{
+                trabalhador.CategoriaCNH = req.CategoriaCNH
+        }</span>
+        <span class="cov0" title="0">if req.ValidadeCNH != nil </span><span class="cov0" title="0">{
+                trabalhador.ValidadeCNH = req.ValidadeCNH
+        }</span>
+        <span class="cov0" title="0">if req.NumeroRNE != nil </span><span class="cov0" title="0">{
+                trabalhador.NumeroRNE = req.NumeroRNE
+        }</span>
+        <span class="cov0" title="0">if req.Telefone != nil </span><span class="cov0" title="0">{
+                trabalhador.Telefone = req.Telefone
+        }</span>
+        <span class="cov0" title="0">if req.Celular != nil </span><span class="cov0" title="0">{
+                trabalhador.Celular = req.Celular
+        }</span>
+        <span class="cov0" title="0">if req.Email != nil </span><span class="cov0" title="0">{
+                trabalhador.Email = req.Email
+        }</span>
+        <span class="cov0" title="0">if req.CEP != nil </span><span class="cov0" title="0">{
+                trabalhador.CEP = req.CEP
+        }</span>
+        <span class="cov0" title="0">if req.Logradouro != nil </span><span class="cov0" title="0">{
+                trabalhador.Logradouro = req.Logradouro
+        }</span>
+        <span class="cov0" title="0">if req.Numero != nil </span><span class="cov0" title="0">{
+                trabalhador.Numero = req.Numero
+        }</span>
+        <span class="cov0" title="0">if req.Complemento != nil </span><span class="cov0" title="0">{
+                trabalhador.Complemento = req.Complemento
+        }</span>
+        <span class="cov0" title="0">if req.Bairro != nil </span><span class="cov0" title="0">{
+                trabalhador.Bairro = req.Bairro
+        }</span>
+        <span class="cov0" title="0">if req.Cidade != nil </span><span class="cov0" title="0">{
+                trabalhador.Cidade = req.Cidade
+        }</span>
+        <span class="cov0" title="0">if req.UF != nil </span><span class="cov0" title="0">{
+                trabalhador.UF = req.UF
+        }</span>
+        <span class="cov0" title="0">if req.Banco != nil </span><span class="cov0" title="0">{
+                trabalhador.Banco = req.Banco
+        }</span>
+        <span class="cov0" title="0">if req.Agencia != nil </span><span class="cov0" title="0">{
+                trabalhador.Agencia = req.Agencia
+        }</span>
+        <span class="cov0" title="0">if req.Conta != nil </span><span class="cov0" title="0">{
+                trabalhador.Conta = req.Conta
+        }</span>
+        <span class="cov0" title="0">if req.TipoConta != nil </span><span class="cov0" title="0">{
+                trabalhador.TipoConta = req.TipoConta
+        }</span>
+        <span class="cov0" title="0">if req.PossuiDeficiencia != nil </span><span class="cov0" title="0">{
+                trabalhador.PossuiDeficiencia = *req.PossuiDeficiencia
+        }</span>
+        <span class="cov0" title="0">if req.TipoDeficiencia != nil </span><span class="cov0" title="0">{
+                trabalhador.TipoDeficiencia = req.TipoDeficiencia
+        }</span>
+        <span class="cov0" title="0">if req.ObservacaoDeficiencia != nil </span><span class="cov0" title="0">{
+                trabalhador.ObservacaoDeficiencia = req.ObservacaoDeficiencia
+        }</span>
+        <span class="cov0" title="0">if req.Situacao != nil </span><span class="cov0" title="0">{
+                trabalhador.Situacao = *req.Situacao
+        }</span>
+        <span class="cov0" title="0">if req.FotoURL != nil </span><span class="cov0" title="0">{
+                trabalhador.FotoURL = req.FotoURL
+        }</span>
+
+        <span class="cov0" title="0">trabalhador.DataAtualizacao = time.Now()
+
+        // Save to repository
+        err = s.repo.Update(ctx, trabalhador)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to update trabalhador: %w", err)
+        }</span>
+
+        // Convert to response
+        <span class="cov0" title="0">response := s.entityToResponse(trabalhador)
+        return response, nil</span>
+}
+
+// Delete removes a trabalhador
+func (s *TrabalhadorService) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        return s.repo.Delete(ctx, id)
+}</span>
+
+// List retrieves trabalhadores with pagination and filtering
+func (s *TrabalhadorService) List(ctx context.Context, req *ListRequest) (*ListResponse[TrabalhadorResponse], error) <span class="cov0" title="0">{
+        trabalhadores, total, err := s.repo.List(ctx, req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Convert entities to responses
+        <span class="cov0" title="0">responses := make([]TrabalhadorResponse, len(trabalhadores))
+        for i, trabalhador := range trabalhadores </span><span class="cov0" title="0">{
+                responses[i] = *s.entityToResponse(trabalhador)
+        }</span>
+
+        // Calculate total pages
+        <span class="cov0" title="0">totalPages := int((total + int64(req.Limit) - 1) / int64(req.Limit))
+        if totalPages == 0 </span><span class="cov0" title="0">{
+                totalPages = 1
+        }</span>
+
+        <span class="cov0" title="0">return &amp;ListResponse[TrabalhadorResponse]{
+                Data:       responses,
+                Total:      total,
+                Page:       req.Page,
+                Limit:      req.Limit,
+                TotalPages: totalPages,
+        }, nil</span>
+}
+
+// entityToResponse converts entity to response DTO
+func (s *TrabalhadorService) entityToResponse(trabalhador *Trabalhador) *TrabalhadorResponse <span class="cov0" title="0">{
+        return &amp;TrabalhadorResponse{
+                ID:                    trabalhador.ID,
+                EmpresaID:             trabalhador.EmpresaID,
+                CPF:                   trabalhador.CPF,
+                NIS:                   trabalhador.NIS,
+                Nome:                  trabalhador.Nome,
+                NomeSocial:            trabalhador.NomeSocial,
+                DataNascimento:        trabalhador.DataNascimento,
+                Sexo:                  trabalhador.Sexo,
+                RacaCor:               trabalhador.RacaCor,
+                EstadoCivil:           trabalhador.EstadoCivil,
+                GrauInstrucao:         trabalhador.GrauInstrucao,
+                PaisNascimento:        trabalhador.PaisNascimento,
+                PaisNacionalidade:     trabalhador.PaisNacionalidade,
+                NumeroCTPS:            trabalhador.NumeroCTPS,
+                SerieCTPS:             trabalhador.SerieCTPS,
+                UFCTPS:                trabalhador.UFCTPS,
+                DataEmissaoCTPS:       trabalhador.DataEmissaoCTPS,
+                NumeroRG:              trabalhador.NumeroRG,
+                OrgaoEmissorRG:        trabalhador.OrgaoEmissorRG,
+                UFRG:                  trabalhador.UFRG,
+                DataEmissaoRG:         trabalhador.DataEmissaoRG,
+                NumeroCNH:             trabalhador.NumeroCNH,
+                CategoriaCNH:          trabalhador.CategoriaCNH,
+                ValidadeCNH:           trabalhador.ValidadeCNH,
+                NumeroRNE:             trabalhador.NumeroRNE,
+                Telefone:              trabalhador.Telefone,
+                Celular:               trabalhador.Celular,
+                Email:                 trabalhador.Email,
+                CEP:                   trabalhador.CEP,
+                Logradouro:            trabalhador.Logradouro,
+                Numero:                trabalhador.Numero,
+                Complemento:           trabalhador.Complemento,
+                Bairro:                trabalhador.Bairro,
+                Cidade:                trabalhador.Cidade,
+                UF:                    trabalhador.UF,
+                Banco:                 trabalhador.Banco,
+                Agencia:               trabalhador.Agencia,
+                Conta:                 trabalhador.Conta,
+                TipoConta:             trabalhador.TipoConta,
+                PossuiDeficiencia:     trabalhador.PossuiDeficiencia,
+                TipoDeficiencia:       trabalhador.TipoDeficiencia,
+                ObservacaoDeficiencia: trabalhador.ObservacaoDeficiencia,
+                Situacao:              trabalhador.Situacao,
+                DataCadastro:          trabalhador.DataCadastro,
+                DataAtualizacao:       trabalhador.DataAtualizacao,
+                FotoURL:               trabalhador.FotoURL,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package trabalhador
+
+import (
+        "context"
+        "fmt"
+)
+
+// Usecase defines the interface for trabalhador use cases
+type Usecase interface {
+        CreateTrabalhador(ctx context.Context, req *CreateTrabalhadorRequest) (*TrabalhadorResponse, error)
+        GetTrabalhador(ctx context.Context, id string) (*TrabalhadorResponse, error)
+        UpdateTrabalhador(ctx context.Context, id string, req *UpdateTrabalhadorRequest) (*TrabalhadorResponse, error)
+        DeleteTrabalhador(ctx context.Context, id string) error
+        ListTrabalhadores(ctx context.Context, req *ListRequest) (*ListResponse[TrabalhadorResponse], error)
+        ValidateCPF(ctx context.Context, cpf string) error
+        ValidateTrabalhadorData(ctx context.Context, req *CreateTrabalhadorRequest) error
+}
+
+// TrabalhadorUsecase implements Usecase interface
+type TrabalhadorUsecase struct {
+        service Service
+}
+
+// NewUsecase creates a new trabalhador usecase
+func NewUsecase(service Service) Usecase <span class="cov0" title="0">{
+        return &amp;TrabalhadorUsecase{service: service}
+}</span>
+
+// CreateTrabalhador creates a new trabalhador with validation
+func (u *TrabalhadorUsecase) CreateTrabalhador(ctx context.Context, req *CreateTrabalhadorRequest) (*TrabalhadorResponse, error) <span class="cov8" title="1">{
+        // Validate request data
+        if err := u.ValidateTrabalhadorData(ctx, req); err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("validation failed: %w", err)
+        }</span>
+
+        // Validate CPF
+        <span class="cov8" title="1">if err := u.ValidateCPF(ctx, req.CPF); err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("CPF validation failed: %w", err)
+        }</span>
+
+        // Create trabalhador
+        <span class="cov8" title="1">return u.service.Create(ctx, req)</span>
+}
+
+// GetTrabalhador retrieves a trabalhador by ID
+func (u *TrabalhadorUsecase) GetTrabalhador(ctx context.Context, id string) (*TrabalhadorResponse, error) <span class="cov8" title="1">{
+        return u.service.GetByID(ctx, id)
+}</span>
+
+// UpdateTrabalhador updates an existing trabalhador
+func (u *TrabalhadorUsecase) UpdateTrabalhador(ctx context.Context, id string, req *UpdateTrabalhadorRequest) (*TrabalhadorResponse, error) <span class="cov8" title="1">{
+        // If CPF is being updated, validate it
+        if req.NIS != nil </span><span class="cov8" title="1">{
+                if err := u.ValidateCPF(ctx, *req.NIS); err != nil </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("CPF validation failed: %w", err)
+                }</span>
+        }
+
+        <span class="cov8" title="1">return u.service.Update(ctx, id, req)</span>
+}
+
+// DeleteTrabalhador removes a trabalhador
+func (u *TrabalhadorUsecase) DeleteTrabalhador(ctx context.Context, id string) error <span class="cov8" title="1">{
+        return u.service.Delete(ctx, id)
+}</span>
+
+// ListTrabalhadores lists trabalhadores with pagination
+func (u *TrabalhadorUsecase) ListTrabalhadores(ctx context.Context, req *ListRequest) (*ListResponse[TrabalhadorResponse], error) <span class="cov8" title="1">{
+        return u.service.List(ctx, req)
+}</span>
+
+// ValidateCPF validates Brazilian CPF format and checksum
+func (u *TrabalhadorUsecase) ValidateCPF(ctx context.Context, cpf string) error <span class="cov8" title="1">{
+        if len(cpf) != 11 </span><span class="cov8" title="1">{
+                return fmt.Errorf("CPF must have 11 digits")
+        }</span>
+
+        // Check if all digits are the same (invalid CPF)
+        <span class="cov8" title="1">allSame := true
+        for i := 1; i &lt; len(cpf); i++ </span><span class="cov8" title="1">{
+                if cpf[i] != cpf[0] </span><span class="cov8" title="1">{
+                        allSame = false
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if allSame </span><span class="cov8" title="1">{
+                return fmt.Errorf("CPF is invalid")
+        }</span>
+
+        // Calculate first verification digit
+        <span class="cov8" title="1">sum := 0
+        for i := 0; i &lt; 9; i++ </span><span class="cov8" title="1">{
+                digit := int(cpf[i] - '0')
+                sum += digit * (10 - i)
+        }</span>
+        <span class="cov8" title="1">remainder := sum % 11
+        firstDigit := 0
+        if remainder &gt;= 2 </span><span class="cov8" title="1">{
+                firstDigit = 11 - remainder
+        }</span>
+
+        // Check first verification digit
+        <span class="cov8" title="1">if firstDigit != int(cpf[9]-'0') </span><span class="cov8" title="1">{
+                return fmt.Errorf("CPF is invalid")
+        }</span>
+
+        // Calculate second verification digit
+        <span class="cov8" title="1">sum = 0
+        for i := 0; i &lt; 10; i++ </span><span class="cov8" title="1">{
+                digit := int(cpf[i] - '0')
+                sum += digit * (11 - i)
+        }</span>
+        <span class="cov8" title="1">remainder = sum % 11
+        secondDigit := 0
+        if remainder &gt;= 2 </span><span class="cov8" title="1">{
+                secondDigit = 11 - remainder
+        }</span>
+
+        // Check second verification digit
+        <span class="cov8" title="1">if secondDigit != int(cpf[10]-'0') </span><span class="cov8" title="1">{
+                return fmt.Errorf("CPF is invalid")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// ValidateTrabalhadorData validates trabalhador data according to eSocial rules
+func (u *TrabalhadorUsecase) ValidateTrabalhadorData(ctx context.Context, req *CreateTrabalhadorRequest) error <span class="cov8" title="1">{
+        // Validate required fields
+        if req.EmpresaID == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("empresa_id is required")
+        }</span>
+
+        <span class="cov8" title="1">if req.CPF == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("CPF is required")
+        }</span>
+
+        <span class="cov8" title="1">if req.Nome == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("nome is required")
+        }</span>
+
+        <span class="cov8" title="1">if req.PaisNascimento == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("pais_nascimento is required")
+        }</span>
+
+        <span class="cov8" title="1">if req.PaisNacionalidade == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("pais_nacionalidade is required")
+        }</span>
+
+        // Validate sex
+        <span class="cov8" title="1">if req.Sexo != "M" &amp;&amp; req.Sexo != "F" </span><span class="cov8" title="1">{
+                return fmt.Errorf("sexo must be M or F")
+        }</span>
+
+        // Validate race/color if provided
+        <span class="cov8" title="1">if req.RacaCor != nil </span><span class="cov8" title="1">{
+                validRacaCor := []string{"1", "2", "3", "4", "5", "6"}
+                valid := false
+                for _, v := range validRacaCor </span><span class="cov8" title="1">{
+                        if *req.RacaCor == v </span><span class="cov8" title="1">{
+                                valid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !valid </span><span class="cov8" title="1">{
+                        return fmt.Errorf("raca_cor must be one of: 1, 2, 3, 4, 5, 6")
+                }</span>
+        }
+
+        // Validate marital status if provided
+        <span class="cov8" title="1">if req.EstadoCivil != nil </span><span class="cov8" title="1">{
+                validEstadoCivil := []string{"1", "2", "3", "4", "5"}
+                valid := false
+                for _, v := range validEstadoCivil </span><span class="cov8" title="1">{
+                        if *req.EstadoCivil == v </span><span class="cov8" title="1">{
+                                valid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !valid </span><span class="cov8" title="1">{
+                        return fmt.Errorf("estado_civil must be one of: 1, 2, 3, 4, 5")
+                }</span>
+        }
+
+        // Validate education level if provided
+        <span class="cov8" title="1">if req.GrauInstrucao != nil </span><span class="cov8" title="1">{
+                validGrauInstrucao := []string{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"}
+                valid := false
+                for _, v := range validGrauInstrucao </span><span class="cov8" title="1">{
+                        if *req.GrauInstrucao == v </span><span class="cov8" title="1">{
+                                valid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !valid </span><span class="cov8" title="1">{
+                        return fmt.Errorf("grau_instrucao must be one of: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12")
+                }</span>
+        }
+
+        // Validate disability type if disability is indicated
+        <span class="cov8" title="1">if req.PossuiDeficiencia &amp;&amp; req.TipoDeficiencia == nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("tipo_deficiencia is required when possui_deficiencia is true")
+        }</span>
+
+        <span class="cov8" title="1">if req.TipoDeficiencia != nil </span><span class="cov8" title="1">{
+                validTipoDeficiencia := []string{"1", "2", "3", "4", "5", "6"}
+                valid := false
+                for _, v := range validTipoDeficiencia </span><span class="cov8" title="1">{
+                        if *req.TipoDeficiencia == v </span><span class="cov8" title="1">{
+                                valid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !valid </span><span class="cov8" title="1">{
+                        return fmt.Errorf("tipo_deficiencia must be one of: 1, 2, 3, 4, 5, 6")
+                }</span>
+        }
+
+        // Validate driver's license category if provided
+        <span class="cov8" title="1">if req.CategoriaCNH != nil </span><span class="cov8" title="1">{
+                validCategorias := []string{"A", "B", "C", "D", "E", "AB", "AC", "AD", "AE"}
+                valid := false
+                for _, v := range validCategorias </span><span class="cov8" title="1">{
+                        if *req.CategoriaCNH == v </span><span class="cov8" title="1">{
+                                valid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !valid </span><span class="cov8" title="1">{
+                        return fmt.Errorf("categoria_cnh must be one of: A, B, C, D, E, AB, AC, AD, AE")
+                }</span>
+        }
+
+        // Validate account type if provided
+        <span class="cov8" title="1">if req.TipoConta != nil </span><span class="cov8" title="1">{
+                if *req.TipoConta != "1" &amp;&amp; *req.TipoConta != "2" </span><span class="cov8" title="1">{
+                        return fmt.Errorf("tipo_conta must be 1 or 2")
+                }</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file6" style="display: none">package empresa
+
+import (
+        "github.com/avelinobego/esocial/configs"
+        "github.com/avelinobego/esocial/internal/domain/empresa"
+)
+
+type Usecase struct {
+        service *empresa.Service
+        logger  *configs.Logger
+}
+
+func NewUsecase(service *empresa.Service, logger *configs.Logger) *Usecase <span class="cov8" title="1">{
+        return &amp;Usecase{
+                service: service,
+                logger:  logger,
+        }
+}</span>
+
+// Empresa Usecase Methods
+
+func (u *Usecase) CreateEmpresa(req *empresa.CreateEmpresaRequest) (*empresa.EmpresaResponse, error) <span class="cov8" title="1">{
+        u.logger.Info("Creating empresa", "cnpj", req.CNPJ)
+        return u.service.CreateEmpresa(req)
+}</span>
+
+func (u *Usecase) GetEmpresaByID(id string) (*empresa.EmpresaResponse, error) <span class="cov8" title="1">{
+        u.logger.Info("Getting empresa by ID", "id", id)
+        return u.service.GetEmpresaByID(id)
+}</span>
+
+func (u *Usecase) UpdateEmpresa(id string, req *empresa.UpdateEmpresaRequest) (*empresa.EmpresaResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Updating empresa", "id", id)
+        return u.service.UpdateEmpresa(id, req)
+}</span>
+
+func (u *Usecase) DeleteEmpresa(id string) error <span class="cov0" title="0">{
+        u.logger.Info("Deleting empresa", "id", id)
+        return u.service.DeleteEmpresa(id)
+}</span>
+
+func (u *Usecase) ListEmpresas(req *empresa.ListRequest) (*empresa.ListResponse[empresa.EmpresaResponse], error) <span class="cov8" title="1">{
+        u.logger.Info("Listing empresas", "page", req.Page, "limit", req.Limit)
+        return u.service.ListEmpresas(req)
+}</span>
+
+// Estabelecimento Usecase Methods
+
+func (u *Usecase) CreateEstabelecimento(req *empresa.CreateEstabelecimentoRequest) (*empresa.EstabelecimentoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Creating estabelecimento", "empresa_id", req.EmpresaID)
+        return u.service.CreateEstabelecimento(req)
+}</span>
+
+func (u *Usecase) GetEstabelecimentoByID(id string) (*empresa.EstabelecimentoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Getting estabelecimento by ID", "id", id)
+        return u.service.GetEstabelecimentoByID(id)
+}</span>
+
+func (u *Usecase) UpdateEstabelecimento(id string, req *empresa.UpdateEstabelecimentoRequest) (*empresa.EstabelecimentoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Updating estabelecimento", "id", id)
+        return u.service.UpdateEstabelecimento(id, req)
+}</span>
+
+func (u *Usecase) DeleteEstabelecimento(id string) error <span class="cov0" title="0">{
+        u.logger.Info("Deleting estabelecimento", "id", id)
+        return u.service.DeleteEstabelecimento(id)
+}</span>
+
+func (u *Usecase) ListEstabelecimentos(req *empresa.ListRequest) (*empresa.ListResponse[empresa.EstabelecimentoResponse], error) <span class="cov0" title="0">{
+        u.logger.Info("Listing estabelecimentos", "page", req.Page, "limit", req.Limit)
+        return u.service.ListEstabelecimentos(req)
+}</span>
+
+// Rubrica Usecase Methods
+
+func (u *Usecase) CreateRubrica(req *empresa.CreateRubricaRequest) (*empresa.RubricaResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Creating rubrica", "empresa_id", req.EmpresaID, "codigo", req.Codigo)
+        return u.service.CreateRubrica(req)
+}</span>
+
+func (u *Usecase) GetRubricaByID(id string) (*empresa.RubricaResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Getting rubrica by ID", "id", id)
+        return u.service.GetRubricaByID(id)
+}</span>
+
+func (u *Usecase) UpdateRubrica(id string, req *empresa.UpdateRubricaRequest) (*empresa.RubricaResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Updating rubrica", "id", id)
+        return u.service.UpdateRubrica(id, req)
+}</span>
+
+func (u *Usecase) DeleteRubrica(id string) error <span class="cov0" title="0">{
+        u.logger.Info("Deleting rubrica", "id", id)
+        return u.service.DeleteRubrica(id)
+}</span>
+
+func (u *Usecase) ListRubricas(req *empresa.ListRequest) (*empresa.ListResponse[empresa.RubricaResponse], error) <span class="cov0" title="0">{
+        u.logger.Info("Listing rubricas", "page", req.Page, "limit", req.Limit)
+        return u.service.ListRubricas(req)
+}</span>
+
+// Lotacao Usecase Methods
+
+func (u *Usecase) CreateLotacao(req *empresa.CreateLotacaoRequest) (*empresa.LotacaoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Creating lotacao", "empresa_id", req.EmpresaID, "codigo", req.Codigo)
+        return u.service.CreateLotacao(req)
+}</span>
+
+func (u *Usecase) GetLotacaoByID(id string) (*empresa.LotacaoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Getting lotacao by ID", "id", id)
+        return u.service.GetLotacaoByID(id)
+}</span>
+
+func (u *Usecase) UpdateLotacao(id string, req *empresa.UpdateLotacaoRequest) (*empresa.LotacaoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Updating lotacao", "id", id)
+        return u.service.UpdateLotacao(id, req)
+}</span>
+
+func (u *Usecase) DeleteLotacao(id string) error <span class="cov0" title="0">{
+        u.logger.Info("Deleting lotacao", "id", id)
+        return u.service.DeleteLotacao(id)
+}</span>
+
+func (u *Usecase) ListLotacoes(req *empresa.ListRequest) (*empresa.ListResponse[empresa.LotacaoResponse], error) <span class="cov0" title="0">{
+        u.logger.Info("Listing lotacoes", "page", req.Page, "limit", req.Limit)
+        return u.service.ListLotacoes(req)
+}</span>
+
+// Cargo Usecase Methods
+
+func (u *Usecase) CreateCargo(req *empresa.CreateCargoRequest) (*empresa.CargoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Creating cargo", "empresa_id", req.EmpresaID, "codigo", req.Codigo)
+        return u.service.CreateCargo(req)
+}</span>
+
+func (u *Usecase) GetCargoByID(id string) (*empresa.CargoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Getting cargo by ID", "id", id)
+        return u.service.GetCargoByID(id)
+}</span>
+
+func (u *Usecase) UpdateCargo(id string, req *empresa.UpdateCargoRequest) (*empresa.CargoResponse, error) <span class="cov0" title="0">{
+        u.logger.Info("Updating cargo", "id", id)
+        return u.service.UpdateCargo(id, req)
+}</span>
+
+func (u *Usecase) DeleteCargo(id string) error <span class="cov0" title="0">{
+        u.logger.Info("Deleting cargo", "id", id)
+        return u.service.DeleteCargo(id)
+}</span>
+
+func (u *Usecase) ListCargos(req *empresa.ListRequest) (*empresa.ListResponse[empresa.CargoResponse], error) <span class="cov0" title="0">{
+        u.logger.Info("Listing cargos", "page", req.Page, "limit", req.Limit)
+        return u.service.ListCargos(req)
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
