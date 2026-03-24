@@ -20,7 +20,14 @@ Create a new XMLBuilderService and use it to build company registration XML:
 		IndDesoneracao:          "N",
 	}
 
-	xmlStr, err := service.BuildEmpresaInfoXML(emp, nil)
+	params := &EventParams{
+		EmpresaCNPJ: "12345678000123",
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+	xmlStr, err := service.BuildEmpresaInfoXML(emp, params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +51,14 @@ Register a new employee in the system:
 		PaisNacionalidade: "105",
 	}
 
-	xmlStr, err := service.BuildTrabalhadorAdmissionXML(worker, "12345678000123")
+	params := &EventParams{
+		EmpresaCNPJ: "12345678000123",
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+	xmlStr, err := service.BuildTrabalhadorAdmissionXML(worker, params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,12 +75,19 @@ Record an employee termination:
 	}
 
 	dismissalDate := time.Date(2025, 3, 31, 0, 0, 0, 0, time.UTC)
-	xmlStr, err := service.BuildWorkerDismissalXML(
-		worker,
-		"12345678000123",
-		dismissalDate,
-		"pedido_para_empresa", // Requested by employee
-	)
+	params := &WorkerDismissalParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker:             worker,
+		DtDeslig:           dismissalDate,
+		MotivoDesligamento: "pedido_para_empresa",
+	}
+	xmlStr, err := service.BuildWorkerDismissalXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,7 +104,17 @@ Register wage types used in the company:
 		TipoRubrica: "1", // Normal rubric
 	}
 
-	xmlStr, err := service.BuildRubricaTableXML(rubrica, "12345678000123")
+	params := &RubricaTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Rubrica: rubrica,
+	}
+	xmlStr, err := service.BuildRubricaTableXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -102,7 +133,17 @@ Register the locations where workers are allocated:
 		NumeroInscricao: stringPtr("12345678000456"),
 	}
 
-	xmlStr, err := service.BuildWorkLocationTableXML(location, "12345678000123")
+	params := &WorkLocationTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Ambiente: location,
+	}
+	xmlStr, err := service.BuildWorkLocationTableXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -122,7 +163,17 @@ Define work hour patterns:
 		DuracaoIntervalo:     intPtr(60), // 60 minutes
 	}
 
-	xmlStr, err := service.BuildWorkScheduleTableXML(schedule, "12345678000123")
+	params := &WorkScheduleTableParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Horario: schedule,
+	}
+	xmlStr, err := service.BuildWorkScheduleTableXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -138,11 +189,18 @@ Record remuneration for a pay period:
 		Nome: "Pedro Costa",
 	}
 
-	xmlStr, err := service.BuildWorkerRemunerationXML(
-		worker,
-		"12345678000123",
-		"202501", // January 2025
-	)
+	params := &WorkerRemunerationParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker:  worker,
+		Periodo: "202501",
+	}
+	xmlStr, err := service.BuildWorkerRemunerationXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -153,10 +211,17 @@ Declare closure of a payroll period:
 
 	service := NewXMLBuilderService()
 
-	xmlStr, err := service.BuildPeriodClosureXML(
-		"12345678000123",
-		"202501", // January 2025
-	)
+	params := &PeriodClosureParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Periodo: "202501",
+	}
+	xmlStr, err := service.BuildPeriodClosureXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -170,13 +235,20 @@ Record temporary absence (sick leave, statutory leave, etc):
 	startDate := time.Date(2025, 3, 1, 0, 0, 0, 0, time.UTC)
 	endDate := time.Date(2025, 3, 5, 0, 0, 0, 0, time.UTC)
 
-	xmlStr, err := service.BuildWorkerTemporaryLeaveXML(
-		"12345678901", // CPF
-		&startDate,
-		&endDate,
-		"12345678000123", // Company CNPJ
-		"01", // Medical certificate
-	)
+	params := &WorkerTemporaryLeaveParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		TrabalhadorCPF:   "12345678901",
+		DtIniAfastamento: &startDate,
+		DtFimAfastamento: &endDate,
+		TipoAfastamento:  "01",
+	}
+	xmlStr, err := service.BuildWorkerTemporaryLeaveXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -189,11 +261,18 @@ Record a work-related accident:
 
 	accidentDate := time.Date(2025, 3, 20, 10, 30, 0, 0, time.UTC)
 
-	xmlStr, err := service.BuildWorkAccidentXML(
-		"12345678901", // CPF
-		accidentDate,
-		"12345678000123", // Company CNPJ
-	)
+	params := &WorkAccidentParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		TrabalhadorCPF: "12345678901",
+		DtAcidente:     accidentDate,
+	}
+	xmlStr, err := service.BuildWorkAccidentXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -209,11 +288,18 @@ Record FGTS calculation bases for workers:
 		Nome: "Ana Silva",
 	}
 
-	xmlStr, err := service.BuildWorkerFGTSXML(
-		worker,
-		"12345678000123",
-		"202501", // January 2025
-	)
+	params := &WorkerFGTSParams{
+		EventParams: EventParams{
+			EmpresaCNPJ: "12345678000123",
+			TpAmb:       1,
+			ProcEmi:     1,
+			VerProc:     "1.0.0",
+			TpInsc:      1,
+		},
+		Worker:  worker,
+		Periodo: "202501",
+	}
+	xmlStr, err := service.BuildWorkerFGTSXML(params)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -244,25 +330,49 @@ Typical flow for processing multiple events:
 	// Collect all events
 	var events []string
 
+	// Create common event parameters
+	eventParams := EventParams{
+		EmpresaCNPJ: cnpj,
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+
 	// 1. Register company
-	empXML, _ := service.BuildEmpresaInfoXML(empresa, nil)
+	empXML, _ := service.BuildEmpresaInfoXML(empresa, &eventParams)
 	events = append(events, empXML)
 
 	// 2. Register locations
 	for _, loc := range locations {
-		locXML, _ := service.BuildWorkLocationTableXML(loc, cnpj)
+		locParams := &WorkLocationTableParams{
+			EventParams: eventParams,
+			Ambiente:    loc,
+		}
+		locXML, _ := service.BuildWorkLocationTableXML(locParams)
 		events = append(events, locXML)
 	}
 
 	// 3. Register wages
 	for _, rubrica := range rubricas {
-		rubXML, _ := service.BuildRubricaTableXML(rubrica, cnpj)
+		rubParams := &RubricaTableParams{
+			EventParams: eventParams,
+			Rubrica:     rubrica,
+		}
+		rubXML, _ := service.BuildRubricaTableXML(rubParams)
 		events = append(events, rubXML)
 	}
 
 	// 4. Register workers
 	for _, worker := range workers {
-		workerXML, _ := service.BuildTrabalhadorAdmissionXML(worker, cnpj)
+		workerParams := &EventParams{
+			EmpresaCNPJ: eventParams.EmpresaCNPJ,
+			TpAmb:       eventParams.TpAmb,
+			ProcEmi:     eventParams.ProcEmi,
+			VerProc:     eventParams.VerProc,
+			TpInsc:      eventParams.TpInsc,
+		}
+		workerXML, _ := service.BuildTrabalhadorAdmissionXML(worker, workerParams)
 		events = append(events, workerXML)
 	}
 
@@ -277,7 +387,14 @@ ERROR HANDLING BEST PRACTICES
 
 Always check errors and implement proper error handling:
 
-	xml, err := service.BuildEmpresaInfoXML(emp, nil)
+	params := &EventParams{
+		EmpresaCNPJ: "12345678000123",
+		TpAmb:       1,
+		ProcEmi:     1,
+		VerProc:     "1.0.0",
+		TpInsc:      1,
+	}
+	xml, err := service.BuildEmpresaInfoXML(emp, params)
 	if err != nil {
 		switch err.(type) {
 		case *xml.SyntaxError:
@@ -326,6 +443,6 @@ Typical integration pattern:
 		}
 
 		service := NewXMLBuilderService()
-		return service.BuildTrabalhadorAdmissionXML(worker, "12345678000123")
+		return service.BuildTrabalhadorAdmissionXML(worker, "12345678000123", int64(1), int64(1), "1.0.0", int64(1))
 	}
 */
