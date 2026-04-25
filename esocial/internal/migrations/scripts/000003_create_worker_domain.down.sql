@@ -1,3 +1,0 @@
-DROP TABLE IF EXISTS dependentes;
-DROP TABLE IF EXISTS vinculos;
-DROP TABLE IF EXISTS trabalhadores;
