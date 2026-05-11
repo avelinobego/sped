@@ -12,7 +12,7 @@ func BuildInsert(table string, model any) (string, error) {
 	t := reflect.TypeOf(model)
 
 	// Dereference pointer if needed
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	}
 
@@ -23,8 +23,7 @@ func BuildInsert(table string, model any) (string, error) {
 	var columns []string
 	var params []string
 
-	for i := range t.NumField() {
-		field := t.Field(i)
+	for field := range t.Fields() {
 
 		tag := field.Tag.Get("db")
 		if tag == "" || tag == "-" {
