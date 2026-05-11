@@ -1,6 +1,7 @@
 package empregador_test
 
 import (
+	"context"
 	"sped/esocial/internal/model/empregador"
 	"testing"
 	"time"
@@ -15,7 +16,10 @@ func TestGetEmpresas(t *testing.T) {
 	db := sqlx.MustConnect("postgres", "user=postgres password=postgres dbname=esocial sslmode=disable")
 	defer db.Close()
 
-	empresas, err := empregador.GetEmpresas(db)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	empresas, err := empregador.GetEmpresas(ctx, db)
 	if err != nil {
 		t.Fatalf("Failed to get empresas: %v", err)
 	}
@@ -48,7 +52,10 @@ func TestInsert(t *testing.T) {
 		DataCadastro: new(time.Now()),
 	}
 
-	if tx, err := db.Beginx(); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if tx, err := db.BeginTxx(ctx, nil); err != nil {
 		t.Fatalf("Failed to begin transaction: %v", err)
 	} else {
 		defer func() {
@@ -58,11 +65,57 @@ func TestInsert(t *testing.T) {
 			}
 		}()
 
-		err = empregador.InsertEmpresa(tx, empresa)
+		err = empregador.InsertEmpresa(ctx, tx, empresa)
 		if err != nil {
 			t.Fatalf("Failed to insert empresa: %v", err)
 		} else {
 			t.Log("Successfully inserted empresa")
+		}
+	}
+
+}
+
+func TestInsertLote(t *testing.T) {
+
+	db := sqlx.MustConnect("postgres", "user=postgres password=postgres dbname=esocial sslmode=disable")
+	defer db.Close()
+
+	var empresas []empregador.Empresas
+	fake := faker.New()
+
+	for i := 0; i < 5; i++ {
+		uuid, err := uuid.NewV7()
+		if err != nil {
+			t.Fatalf("Failed to generate UUID: %v", err)
+		}
+
+		empresa := empregador.Empresas{
+			Id:           uuid.String(),
+			Cnpj:         fake.Numerify("04126###0001##"),
+			RazaoSocial:  "Empresa Teste",
+			DataCadastro: new(time.Now()),
+		}
+		empresas = append(empresas, empresa)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if tx, err := db.BeginTxx(ctx, nil); err != nil {
+		t.Fatalf("Failed to begin transaction: %v", err)
+	} else {
+		defer func() {
+			erro := tx.Commit()
+			if erro != nil {
+				t.Fatalf("Failed to rollback transaction: %v", erro)
+			}
+		}()
+
+		err = empregador.InsertEmpresas(ctx, tx, empresas)
+		if err != nil {
+			t.Fatalf("Failed to insert empresas: %v", err)
+		} else {
+			t.Log("Successfully inserted empresas")
 		}
 	}
 
