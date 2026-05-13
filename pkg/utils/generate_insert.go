@@ -2,43 +2,21 @@ package utils
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 )
 
 // BuildInsert generates an INSERT SQL statement and returns the query string.
 // It uses reflection to read `db` tags from the struct fields.
 func BuildInsert(table string, model any) (string, error) {
-	t := reflect.TypeOf(model)
 
-	// Dereference pointer if needed
-	if t.Kind() == reflect.Pointer {
-		t = t.Elem()
-	}
-
-	if t.Kind() != reflect.Struct {
-		return "", fmt.Errorf("model must be a struct, got %s", t.Kind())
-	}
-
-	var columns []string
 	var params []string
-
-	for field := range t.Fields() {
-
-		tag := field.Tag.Get("db")
-		if tag == "" || tag == "-" {
-			continue
-		}
-
-		// Support "column,omitempty" style tags — take only the name part
-		colName := strings.Split(tag, ",")[0]
-
-		columns = append(columns, colName)
-		params = append(params, ":"+colName) // sqlx named parameter style
+	columns, err := getStructFields(model)
+	if err != nil {
+		return "", err
 	}
 
-	if len(columns) == 0 {
-		return "", fmt.Errorf("no 'db' tags found on struct %s", t.Name())
+	for _, col := range columns {
+		params = append(params, ":"+col)
 	}
 
 	query := fmt.Sprintf(
