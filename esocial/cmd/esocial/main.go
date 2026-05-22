@@ -9,38 +9,47 @@ import (
 	"syscall"
 	"time"
 
-	"sped/esocial/internal/controller"
+	"sped/esocial/internal/handlers"
 	_ "sped/esocial/pkg/config"
 )
 
 func main() {
 
 	server := &http.Server{
-		Handler:      controller.NewHandlers(),
+		Handler:      handlers.GetRouter(),
 		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
-	go func(s *http.Server) {
+	serverErrors := make(chan error, 1)
+
+	go func(e chan<- error) {
 		slog.Info("Starting eSocial application...")
-		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			slog.Error("Failed to start server", "error", err)
-		}
-	}(server)
+		e <- server.ListenAndServe()
+	}(serverErrors)
 
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
-	<-stop
-	slog.Info("Shutting down eSocial application...")
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	select {
+	case err := <-serverErrors:
+		if err != nil && err != http.ErrServerClosed {
+			slog.Error("Failed to start server", "error", err)
+		}
+	case s := <-stop:
+		slog.Info("Shutting down eSocial application...", "signal", s)
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
 
-	if err := server.Shutdown(ctx); err != nil {
-		slog.ErrorContext(ctx, "Failed to shutdown server", "error", err)
-	} else {
-		slog.InfoContext(ctx, "Server shutdown successfully")
+		if err := server.Shutdown(ctx); err != nil {
+			slog.Error("Failed to shutdown server", "error", err)
+			if err := server.Close(); err != nil {
+				slog.Error("Failed to close server", "error", err)
+			}
+		} else {
+			slog.Info("Server shutdown successfully")
+		}
 	}
 
 }
