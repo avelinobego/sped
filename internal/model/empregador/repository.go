@@ -2,7 +2,7 @@ package empregador
 
 import (
 	"context"
-	"sped/esocial/pkg/utils"
+	"sped/esocial/pkg/generatesql"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -15,13 +15,18 @@ func GetAll(context context.Context, q *sqlx.DB) (result []Empresas, err error) 
 	return
 }
 
-func GetEmpresaById(context context.Context, q *sqlx.DB, id string) (result Empresas, err error) {
+func GetById(context context.Context, q *sqlx.DB, id string) (result Empresas, err error) {
 	err = q.GetContext(context, &result, "SELECT * FROM empresas WHERE id = $1", id)
 	return
 }
 
+func GetByCNPJ(context context.Context, q *sqlx.DB, cnpj string) (result Empresas, err error) {
+	err = q.GetContext(context, &result, "SELECT * FROM empresas WHERE cnpj = $1", cnpj)
+	return
+}
+
 func InsertOne(context context.Context, tx *sqlx.Tx, empresa *Empresas) error {
-	query, err := utils.BuildInsert("empresas", vazio)
+	query, err := generatesql.BuildInsert("empresas", vazio)
 	if err != nil {
 		return err
 	}
@@ -31,7 +36,7 @@ func InsertOne(context context.Context, tx *sqlx.Tx, empresa *Empresas) error {
 }
 
 func InsertMany(context context.Context, tx *sqlx.Tx, empresas []Empresas) error {
-	query, err := utils.BuildInsert("empresas", vazio)
+	query, err := generatesql.BuildInsert("empresas", vazio)
 	if err != nil {
 		return err
 	}
@@ -40,7 +45,7 @@ func InsertMany(context context.Context, tx *sqlx.Tx, empresas []Empresas) error
 }
 
 func Update(context context.Context, tx *sqlx.Tx, empresa *Empresas) error {
-	query, err := utils.BuildUpdate("empresas", vazio, "id")
+	query, err := generatesql.BuildUpdate("empresas", vazio, "id")
 	if err != nil {
 		return err
 	}
@@ -56,15 +61,6 @@ func UpdateMany(context context.Context, tx *sqlx.Tx, empresas []Empresas) error
 	}
 	return nil
 }
-
-// func PartialUpdate(context context.Context, tx *sqlx.Tx, empresa *Empresas) error {
-// 	query, args, err := utils.BuildPartialUpdate("empresas", vazio, "id", empresa)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	_, err = tx.ExecContext(context, query, args...)
-// 	return err
-// }
 
 func DeleteMany(context context.Context, tx *sqlx.Tx, ids []string) (rows int64, err error) {
 	query, args, err := sqlx.In("DELETE FROM empresas WHERE id IN (?)", ids)
