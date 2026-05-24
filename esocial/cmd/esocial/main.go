@@ -16,7 +16,7 @@ import (
 func main() {
 
 	server := &http.Server{
-		Handler:      handlers.GetRouter(),
+		Handler:      handlers.Handlers(),
 		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
