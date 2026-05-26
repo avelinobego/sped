@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"sped/esocial/internal/model/empregador"
+	empregador "sped/esocial/internal/model/empregador/handler"
 
 	"github.com/gorilla/mux"
 )
@@ -9,6 +9,6 @@ import (
 func Handlers() *mux.Router {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
-	empregador.Registrar(r)
+	empregador.Register(r)
 	return r
 }
