@@ -1,0 +1,112 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0",
+  "settings": {
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": 0,
+    "scrollLeft": 0,
+    "zoomLevel": 1,
+    "show": 431,
+    "database": 4,
+    "databaseName": "esocial",
+    "canvasType": "ERD",
+    "language": 1,
+    "tableNameCase": 4,
+    "columnNameCase": 2,
+    "bracketType": 1,
+    "relationshipDataTypeSync": true,
+    "relationshipOptimization": false,
+    "columnOrder": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "maxWidthComment": -1,
+    "ignoreSaveSettings": 0
+  },
+  "doc": {
+    "tableIds": [
+      "mQ07_qpuOXUjT2qKQasH_"
+    ],
+    "relationshipIds": [],
+    "indexIds": [],
+    "memoIds": []
+  },
+  "collections": {
+    "tableEntities": {
+      "NcGljel2ulHo-cawX5HWQ": {
+        "id": "NcGljel2ulHo-cawX5HWQ",
+        "name": "empresas",
+        "comment": "",
+        "columnIds": [],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 50,
+          "y": 59,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1780632587491,
+          "createAt": 1780632572489
+        }
+      },
+      "mQ07_qpuOXUjT2qKQasH_": {
+        "id": "mQ07_qpuOXUjT2qKQasH_",
+        "name": "empresas",
+        "comment": "",
+        "columnIds": [
+          "8YcRmwwmKu3dhQOQUGvcX"
+        ],
+        "seqColumnIds": [
+          "8YcRmwwmKu3dhQOQUGvcX"
+        ],
+        "ui": {
+          "x": 13,
+          "y": 28,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1780632666724,
+          "createAt": 1780632622891
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "8YcRmwwmKu3dhQOQUGvcX": {
+        "id": "8YcRmwwmKu3dhQOQUGvcX",
+        "tableId": "mQ07_qpuOXUjT2qKQasH_",
+        "name": "id",
+        "comment": "",
+        "dataType": "VARCHAR",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1780632812069,
+          "createAt": 1780632666724
+        }
+      }
+    },
+    "relationshipEntities": {},
+    "indexEntities": {},
+    "indexColumnEntities": {},
+    "memoEntities": {}
+  }
+}
