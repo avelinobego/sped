@@ -6,11 +6,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sped/esocial/internal/handlers"
 	"syscall"
 	"time"
-
-	"sped/esocial/internal/handlers"
-	_ "sped/esocial/pkg/config"
 )
 
 func main() {
