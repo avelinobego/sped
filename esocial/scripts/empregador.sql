@@ -1,4 +1,4 @@
-1. Tabela de Tipos de Inscrição (Domínio do eSocial - S-1000)
+-- 1. Tabela de Tipos de Inscrição (Domínio do eSocial - S-1000)
 CREATE TABLE tipo_inscricao (
     id_tipo_inscricao SERIAL PRIMARY KEY,
     codigo INT UNIQUE NOT NULL, -- 1: CNPJ, 2: CPF, 3: CAEPF, 4: CNO
