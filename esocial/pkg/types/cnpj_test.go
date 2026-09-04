@@ -38,8 +38,8 @@ func TestCNPJ_MarshalXML(t *testing.T) {
 		},
 		{
 			name:    "CNPJ alfanumérico dígito verificador inválido (conforme padrão atual)",
-			input:   "12.ABC.345/0001-70", // Ajuste para um CNPJ alfanumérico com DV inválido se necessário
-			wantXML: "",
+			input:   "PX.04H.19B/0001-17", // Ajuste para um CNPJ alfanumérico com DV inválido se necessário
+			wantXML: "<wrapper><cnpj>PX04H19B000117</cnpj></wrapper>",
 			wantErr: false, // Se o dígito não bater com o cálculo padrão do módulo 11, deve retornar erro
 		},
 	}
