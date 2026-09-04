@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sped/esocial/internal/handlers"
 	"syscall"
 	"time"
+
+	"sped/esocial/internal/handlers"
 )
 
 func main() {
-
 	server := &http.Server{
 		Handler:      handlers.Handlers(),
 		Addr:         ":8080",
@@ -49,5 +49,4 @@ func main() {
 			slog.Info("Server shutdown successfully")
 		}
 	}
-
 }
