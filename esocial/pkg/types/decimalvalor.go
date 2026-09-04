@@ -13,6 +13,15 @@ type DecimalValor struct {
 }
 
 func (v DecimalValor) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+
+	if v.Value == 0 && v.Casas == 0 {
+		return e.EncodeElement(nil, start)
+	}
+
+	if v.Casas < 0 {
+		return fmt.Errorf("casas decimais não podem ser negativas")
+	}
+
 	format := fmt.Sprintf("%%.%df", v.Casas)
 	formatted := fmt.Sprintf(format, v.Value)
 	// O eSocial exige ponto como separador decimal
